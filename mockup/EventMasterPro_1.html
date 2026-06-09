@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EventMaster Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #1a2744;
+    --brand-light: #243560;
+    --accent: #e8a838;
+    --accent-dark: #c4892a;
+    --surface: #f5f4f0;
+    --card: #ffffff;
+    --border: #e2e0d8;
+    --text: #1a1a18;
+    --text-muted: #6b6960;
+    --text-hint: #a09e96;
+    --success-bg: #eaf3de;
+    --success-text: #3b6d11;
+    --danger-bg: #fcebeb;
+    --danger-text: #a32d2d;
+    --warning-bg: #faeeda;
+    --warning-text: #854f0b;
+    --info-bg: #e6f1fb;
+    --info-text: #185fa5;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 2px 12px rgba(26,39,68,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,39,68,0.14);
+    --sidebar-w: 240px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  h1,h2,h3 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 22px; }
+  h3 { font-size: 17px; }
+
+  /* ===== AUTH SCREENS ===== */
+  .auth-wrap {
+    min-height: 100vh;
+    display: flex;
+    background: var(--brand);
+  }
+  .auth-left {
+    width: 420px;
+    flex-shrink: 0;
+    background: var(--brand);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 48px;
+    position: relative;
+  }
+  .auth-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='28'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+  }
+  .auth-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; position: relative; z-index: 1; }
+  .auth-brand-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--accent); display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: var(--brand); font-weight: 700; font-family: 'DM Serif Display', serif;
+  }
+  .auth-brand-name { color: #fff; font-size: 20px; font-family: 'DM Serif Display', serif; line-height: 1.2; }
+  .auth-brand-sub { color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .auth-tagline { color: #fff; font-size: 32px; font-family: 'DM Serif Display', serif; line-height: 1.25; position: relative; z-index: 1; }
+  .auth-tagline em { color: var(--accent); font-style: italic; }
+  .auth-desc { color: rgba(255,255,255,0.55); font-size: 14px; margin-top: 16px; line-height: 1.7; position: relative; z-index: 1; }
+  .auth-right {
+    flex: 1;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .auth-card {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+  }
+  .auth-card h2 { margin-bottom: 6px; }
+  .auth-card .subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 28px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .form-control {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border);
+    border-radius: var(--radius); font-family: inherit; font-size: 14px;
+    background: var(--card); color: var(--text); outline: none; transition: border-color .15s;
+  }
+  .form-control:focus { border-color: var(--brand); }
+  .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6960' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  textarea.form-control { resize: vertical; min-height: 80px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: var(--radius); font-family: inherit; font-size: 14px; font-weight: 500;
+    cursor: pointer; border: none; transition: all .15s; text-decoration: none; white-space: nowrap;
+  }
+  .btn-primary { background: var(--brand); color: #fff; }
+  .btn-primary:hover { background: var(--brand-light); }
+  .btn-accent { background: var(--accent); color: var(--brand); }
+  .btn-accent:hover { background: var(--accent-dark); }
+  .btn-outline { background: transparent; color: var(--brand); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--brand); background: var(--info-bg); }
+  .btn-danger { background: var(--danger-bg); color: var(--danger-text); border: none; }
+  .btn-danger:hover { background: #f7c1c1; }
+  .btn-success { background: var(--success-bg); color: var(--success-text); border: none; }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: none; }
+  .btn-ghost:hover { background: var(--border); color: var(--text); }
+  .btn-block { width: 100%; justify-content: center; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-lg { padding: 14px 28px; font-size: 15px; }
+  .auth-link { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-muted); }
+  .auth-link a { color: var(--brand); font-weight: 500; text-decoration: none; cursor: pointer; }
+  .auth-link a:hover { text-decoration: underline; }
+  .alert { padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 14px; }
+  .alert-danger { background: var(--danger-bg); color: var(--danger-text); }
+  .alert-success { background: var(--success-bg); color: var(--success-text); }
+  .alert-warning { background: var(--warning-bg); color: var(--warning-text); }
+  .role-pills { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .role-pill {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer;
+    border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); transition: all .15s;
+  }
+  .role-pill.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+  /* ===== APP SHELL ===== */
+  .app-shell { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--brand); display: flex; flex-direction: column;
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto;
+  }
+  .sidebar-brand {
+    padding: 20px 20px 16px; display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-brand-icon {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--brand); font-weight: 700; font-family: 'DM Serif Display', serif; flex-shrink: 0;
+  }
+  .sidebar-brand-text { color: #fff; font-size: 15px; font-family: 'DM Serif Display', serif; line-height: 1.2; }
+  .sidebar-brand-sub { color: rgba(255,255,255,0.4); font-size: 10px; }
+  .sidebar-user {
+    padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 8px;
+  }
+  .user-avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--brand); font-weight: 700; flex-shrink: 0;
+  }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-role { color: rgba(255,255,255,0.45); font-size: 11px; }
+  .nav-section { padding: 0 10px 8px; }
+  .nav-section-label { color: rgba(255,255,255,0.3); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; padding: 10px 8px 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px;
+    color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 400; cursor: pointer;
+    transition: all .15s; margin-bottom: 2px; text-decoration: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+  .nav-item.active { background: rgba(255,255,255,0.12); color: #fff; font-weight: 500; }
+  .nav-item svg { flex-shrink: 0; opacity: 0.7; }
+  .nav-item.active svg { opacity: 1; }
+  .nav-badge {
+    margin-left: auto; background: var(--accent); color: var(--brand);
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; min-width: 20px; text-align: center;
+  }
+  .sidebar-footer { margin-top: auto; padding: 12px 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+  /* ===== MAIN CONTENT ===== */
+  .main-content { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+  .topbar {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title { font-size: 16px; font-weight: 500; }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+  .page { padding: 28px; flex: 1; }
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
+  .page-header-text h1 { font-size: 24px; margin-bottom: 2px; }
+  .page-header-text p { color: var(--text-muted); font-size: 13px; }
+
+  /* ===== STATS CARDS ===== */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat-card { background: var(--card); border-radius: var(--radius-lg); padding: 18px 20px; border: 1px solid var(--border); }
+  .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-family: 'DM Serif Display', serif; color: var(--text); line-height: 1; }
+  .stat-sub { font-size: 11px; color: var(--text-hint); margin-top: 4px; }
+  .stat-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+
+  /* ===== CARDS & TABLES ===== */
+  .card { background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; }
+  .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 15px; font-weight: 500; }
+  .card-body { padding: 20px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 14px; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; border-bottom: 1px solid var(--border); background: var(--surface); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(26,39,68,0.02); }
+
+  /* ===== BADGES ===== */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-success { background: var(--success-bg); color: var(--success-text); }
+  .badge-danger { background: var(--danger-bg); color: var(--danger-text); }
+  .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
+  .badge-info { background: var(--info-bg); color: var(--info-text); }
+  .badge-gray { background: #f1efe8; color: #5f5e5a; }
+  .badge-brand { background: rgba(26,39,68,0.1); color: var(--brand); }
+  .badge-accent { background: var(--warning-bg); color: var(--warning-text); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(26,39,68,0.55); z-index: 200;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal {
+    background: var(--card); border-radius: var(--radius-lg); width: 100%; max-width: 520px;
+    box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto;
+  }
+  .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 17px; font-weight: 500; }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+  .btn-close { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .btn-close:hover { background: var(--border); color: var(--text); }
+
+  /* ===== SEARCH & FILTERS ===== */
+  .filters-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
+  .search-box { position: relative; flex: 1; min-width: 200px; }
+  .search-box svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-hint); }
+  .search-box input { padding-left: 34px; }
+  .filter-select { width: auto; min-width: 130px; }
+
+  /* ===== EVENT CARDS ===== */
+  .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; }
+  .event-card {
+    background: var(--card); border-radius: var(--radius-lg); border: 1px solid var(--border);
+    overflow: hidden; transition: box-shadow .15s, transform .15s; cursor: pointer;
+  }
+  .event-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .event-card-img {
+    height: 120px; display: flex; align-items: center; justify-content: center;
+    font-size: 36px; position: relative;
+  }
+  .event-card-body { padding: 16px; }
+  .event-card-type { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-hint); margin-bottom: 4px; }
+  .event-card-name { font-family: 'DM Serif Display', serif; font-size: 16px; margin-bottom: 8px; line-height: 1.3; }
+  .event-card-meta { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--text-muted); }
+  .event-card-meta span { display: flex; align-items: center; gap: 5px; }
+  .event-card-footer { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .event-price { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--brand); }
+
+  /* ===== NOTIFICATION DOT ===== */
+  .notif-btn { position: relative; }
+  .notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--card); }
+
+  /* ===== AVATAR ===== */
+  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .avatar-brand { background: var(--info-bg); color: var(--info-text); }
+  .avatar-accent { background: var(--warning-bg); color: var(--warning-text); }
+  .avatar-success { background: var(--success-bg); color: var(--success-text); }
+
+  /* ===== STEPPER ===== */
+  .stepper { display: flex; gap: 0; margin-bottom: 28px; }
+  .step { display: flex; align-items: center; flex: 1; }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; transition: all .2s;
+    border: 2px solid var(--border); background: var(--card); color: var(--text-muted);
+  }
+  .step.active .step-num { border-color: var(--brand); background: var(--brand); color: #fff; }
+  .step.done .step-num { border-color: var(--success-text); background: var(--success-bg); color: var(--success-text); }
+  .step-label { font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+  .step.active .step-label { color: var(--brand); font-weight: 500; }
+  .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 8px; }
+  .step.done .step-line { background: var(--success-text); }
+
+  /* ===== PAYMENT ===== */
+  .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .payment-method-card {
+    border: 2px solid var(--border); border-radius: var(--radius); padding: 16px 14px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all .15s;
+    text-align: center;
+  }
+  .payment-method-card:hover { border-color: var(--brand); }
+  .payment-method-card.selected { border-color: var(--brand); background: var(--info-bg); }
+  .payment-method-card .method-icon { font-size: 26px; }
+  .payment-method-card .method-name { font-size: 13px; font-weight: 500; }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+  .empty-state svg { margin: 0 auto 14px; display: block; opacity: 0.3; }
+  .empty-state h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+  .empty-state p { font-size: 13px; }
+
+  /* ===== UTILITY ===== */
+  .hidden { display: none !important; }
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .items-center { align-items: center; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .gap-4 { gap: 16px; }
+  .justify-between { justify-content: space-between; }
+  .mt-2 { margin-top: 8px; }
+  .mt-3 { margin-top: 12px; }
+  .mt-4 { margin-top: 16px; }
+  .mb-3 { margin-bottom: 12px; }
+  .mb-4 { margin-bottom: 16px; }
+  .text-muted { color: var(--text-muted); }
+  .text-sm { font-size: 12px; }
+  .fw-500 { font-weight: 500; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .tag-list { display: flex; gap: 6px; flex-wrap: wrap; }
+  .checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+  .checkbox-row input { width: 15px; height: 15px; cursor: pointer; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--brand); border-radius: 3px; transition: width .3s; }
+
+  /* ===== TOAST ===== */
+  .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+  .toast {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px;
+    font-size: 13px; min-width: 260px; max-width: 340px;
+    animation: slideIn .2s ease-out;
+  }
+  .toast-success { border-left: 3px solid var(--success-text); }
+  .toast-danger { border-left: 3px solid var(--danger-text); }
+  .toast-warning { border-left: 3px solid #ef9f27; }
+  @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    :root { --sidebar-w: 0px; }
+    .sidebar { transform: translateX(-240px); transition: transform .25s; }
+    .sidebar.open { transform: translateX(0); width: 240px; }
+    .auth-left { display: none; }
+  }
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .payment-methods { grid-template-columns: 1fr; }
+    .page { padding: 16px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== AUTH SCREENS ===== -->
+<div id="authWrap" class="auth-wrap">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-brand-icon">E</div>
+      <div>
+        <div class="auth-brand-name">EventMaster Pro</div>
+        <div class="auth-brand-sub">Eventos Premium</div>
+      </div>
+    </div>
+    <div class="auth-tagline">Gestiona eventos<br>con <em>precisión</em><br>y elegancia.</div>
+    <div class="auth-desc">Centraliza la gestión de eventos, clientes, proveedores y pagos en una sola plataforma segura y eficiente.</div>
+  </div>
+  <div class="auth-right">
+    <!-- LOGIN -->
+    <div id="loginScreen" class="auth-card">
+      <h2>Bienvenido</h2>
+      <p class="subtitle">Ingresa tus credenciales para continuar</p>
+      <div class="role-pills">
+        <button class="role-pill active" onclick="selectRole('admin')">Administrador</button>
+        <button class="role-pill" onclick="selectRole('cliente')">Cliente</button>
+        <button class="role-pill" onclick="selectRole('proveedor')">Proveedor</button>
+      </div>
+      <div id="loginAlert" class="alert alert-danger hidden"></div>
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="loginEmail" class="form-control" placeholder="tu@correo.com" value="admin@eventmaster.cl">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" class="form-control" placeholder="••••••••" value="admin123">
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" onclick="doLogin()">Iniciar sesión</button>
+      <div style="display:flex;align-items:center;gap:10px;margin:14px 0 4px">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <span style="font-size:11px;color:var(--text-hint)">o</span>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+      </div>
+      <button class="btn btn-outline btn-block" onclick="entrarComoInvitado()" style="justify-content:center;gap:8px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Continuar como invitado
+      </button>
+      <div class="auth-link mt-2">¿No tienes cuenta? <a onclick="showRegister()">Regístrate aquí</a></div>
+      <div class="auth-link mt-2" style="font-size:11px; color: var(--text-hint);">Demo: admin@eventmaster.cl / admin123</div>
+    </div>
+    <!-- REGISTER -->
+    <div id="registerScreen" class="auth-card hidden">
+      <h2>Crear cuenta</h2>
+      <p class="subtitle">Únete a EventMaster Pro como cliente</p>
+      <div id="registerAlert" class="alert hidden"></div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="regNombre" class="form-control" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <input type="text" id="regApellido" class="form-control" placeholder="Tu apellido">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="regEmail" class="form-control" placeholder="tu@correo.com">
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" id="regTelefono" class="form-control" placeholder="+56 9 1234 5678">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="regPass" class="form-control" placeholder="Mínimo 8 caracteres">
+      </div>
+      <div class="form-group">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="regPass2" class="form-control" placeholder="Repite tu contraseña">
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" onclick="doRegister()">Crear cuenta</button>
+      <div class="auth-link">¿Ya tienes cuenta? <a onclick="showLogin()">Inicia sesión</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP SHELL ===== -->
+<div id="appShell" class="app-shell hidden">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">E</div>
+      <div>
+        <div class="sidebar-brand-text">EventMaster Pro</div>
+        <div class="sidebar-brand-sub">Eventos Premium</div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebarAvatar">A</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebarName">Administrador</div>
+        <div class="user-role" id="sidebarRole">Administrador</div>
+      </div>
+    </div>
+    <div class="nav-section" id="navItems"></div>
+    <div class="sidebar-footer">
+      <div class="nav-item" onclick="STATE.role==='invitado'?volverAlLogin():doLogout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span id="logoutLabel">Cerrar sesión</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="flex items-center gap-3">
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm notif-btn" onclick="showPage('notificaciones')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-dot"></div>
+        </button>
+      </div>
+    </header>
+    <main id="pageContent" class="page"></main>
+  </div>
+</div>
+
+<!-- MODAL CONTAINER -->
+<div id="modalContainer"></div>
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ============================================================
+//  STATE
+// ============================================================
+const STATE = {
+  user: null,
+  role: 'admin',
+  loginAttempts: 0,
+  lockedUntil: null,
+};
+
+// ============================================================
+//  MOCK DATA
+// ============================================================
+const USERS = [
+  { id:1, nombre:'Valentina', apellido:'Acuña', email:'admin@eventmaster.cl', pass:'admin123', rol:'admin', estado:'activo', telefono:'+56912345678', fechaRegistro:'2026-01-10' },
+  { id:2, nombre:'Carlos', apellido:'Mendoza', email:'cliente@test.cl', pass:'cli123', rol:'cliente', estado:'activo', telefono:'+56987654321', fechaRegistro:'2026-02-15' },
+  { id:3, nombre:'Proveedor', apellido:'Audio', email:'proveedor@test.cl', pass:'prov123', rol:'proveedor', estado:'activo', telefono:'+56911111111', fechaRegistro:'2026-01-20' },
+  { id:4, nombre:'Angela', apellido:'Vásquez', email:'angela@eventmaster.cl', pass:'ang123', rol:'admin', estado:'activo', telefono:'+56922222222', fechaRegistro:'2026-01-12' },
+  { id:5, nombre:'María', apellido:'González', email:'maria@gmail.com', pass:'cli456', rol:'cliente', estado:'inactivo', telefono:'+56933333333', fechaRegistro:'2026-03-01' },
+];
+
+const EVENTOS = [
+  { id:1, nombre:'Boda García-Morales', tipo:'Matrimonio', fecha:'2026-09-15', hora:'18:00', lugar:'Casona Las Rosas, Vitacura', capacidadMax:150, capacidadDisp:42, precioBase:850000, estado:'activo', descripcion:'Elegante matrimonio con vista al jardín', emoji:'💍' },
+  { id:2, nombre:'Cumpleaños de Empresa TechCorp', tipo:'Corporativo', fecha:'2026-07-22', hora:'20:00', lugar:'Salón Grand, Las Condes', capacidadMax:80, capacidadDisp:25, precioBase:350000, estado:'activo', descripcion:'Celebración aniversario corporativo', emoji:'🏢' },
+  { id:3, nombre:'Cumpleaños Infantil Luna', tipo:'Cumpleaños', fecha:'2026-08-05', hora:'15:00', lugar:'Parque Central, Providencia', capacidadMax:50, capacidadDisp:18, precioBase:180000, estado:'activo', descripcion:'Fiesta temática de unicornios', emoji:'🎂' },
+  { id:4, nombre:'Conferencia Innovación 2026', tipo:'Corporativo', fecha:'2026-10-10', hora:'09:00', lugar:'Centro de Eventos, Santiago', capacidadMax:300, capacidadDisp:210, precioBase:95000, estado:'activo', descripcion:'Conferencia anual de tecnología e innovación', emoji:'🎯' },
+  { id:5, nombre:'Matrimonio Silva-Torres', tipo:'Matrimonio', fecha:'2025-06-01', hora:'17:00', lugar:'Hacienda Los Andes', capacidadMax:120, capacidadDisp:0, precioBase:980000, estado:'finalizado', descripcion:'Matrimonio campestre', emoji:'💒' },
+];
+
+const PROVEEDORES = [
+  { id:1, idUsuario:3, empresa:'Audio & Sonido Pro', servicios:'Sonido, DJ e iluminación profesional', calificacion:4.8, disponibilidad:true, tipo:'Sonido', precio:450000 },
+  { id:2, idUsuario:null, empresa:'Flores & Arte', servicios:'Decoración floral y ambientación', calificacion:4.9, disponibilidad:true, tipo:'Decoración', precio:320000 },
+  { id:3, idUsuario:null, empresa:'Foto Moments', servicios:'Fotografía y video profesional', calificacion:4.7, disponibilidad:false, tipo:'Fotografía', precio:580000 },
+  { id:4, idUsuario:null, empresa:'Chef Events Catering', servicios:'Servicio de catering y banquetes', calificacion:4.6, disponibilidad:true, tipo:'Catering', precio:280000 },
+];
+
+const ASIGNACIONES = [
+  { id:1, idEvento:1, idProveedor:1, servicio:'Sonido y DJ', estado:'aceptada', fecha:'2026-08-01', nota:'' },
+  { id:2, idEvento:1, idProveedor:2, servicio:'Decoración floral', estado:'pendiente', fecha:'2026-08-05', nota:'' },
+  { id:3, idEvento:2, idProveedor:4, servicio:'Catering corporativo', estado:'rechazada', fecha:'2026-07-10', nota:'Sin disponibilidad esa fecha' },
+  { id:4, idEvento:3, idProveedor:2, servicio:'Decoración temática', estado:'aceptada', fecha:'2026-07-15', nota:'' },
+];
+
+const RESERVAS = [
+  { id:1, idEvento:1, idUsuario:2, fechaReserva:'2026-07-01', cantPersonas:2, estado:'confirmada' },
+  { id:2, idEvento:2, idUsuario:2, fechaReserva:'2026-07-05', cantPersonas:5, estado:'pendiente' },
+  { id:3, idEvento:4, idUsuario:5, fechaReserva:'2026-07-10', cantPersonas:3, estado:'cancelada' },
+];
+
+const PAGOS = [
+  { id:1, idReserva:1, monto:1700000, metodo:'credito', estado:'completado', fecha:'2026-07-02', numTrans:'TXN-2026-0001' },
+  { id:2, idReserva:2, monto:1750000, metodo:'debito', estado:'pendiente', fecha:null, numTrans:null },
+];
+
+const NOTIFICACIONES = [
+  { id:1, mensaje:'Nueva reserva confirmada para Boda García-Morales', tipo:'reserva', leida:false, fecha:'2026-07-02 14:32', idDestino:'admin' },
+  { id:2, mensaje:'Proveedor Audio & Sonido Pro aceptó la asignación', tipo:'asignacion', leida:false, fecha:'2026-07-01 10:15', idDestino:'admin' },
+  { id:3, mensaje:'Tu reserva para Boda García-Morales fue confirmada', tipo:'pago', leida:true, fecha:'2026-07-02 14:35', idDestino:'cliente' },
+  { id:4, mensaje:'Nueva asignación para Conferencia Innovación 2026', tipo:'asignacion', leida:false, fecha:'2026-07-08 09:00', idDestino:'proveedor' },
+];
+
+// ============================================================
+//  AUTH
+// ============================================================
+let selectedRole = 'admin';
+function selectRole(role) {
+  selectedRole = role;
+  document.querySelectorAll('.role-pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  const demos = { admin:'admin@eventmaster.cl', cliente:'cliente@test.cl', proveedor:'proveedor@test.cl' };
+  const passes = { admin:'admin123', cliente:'cli123', proveedor:'prov123' };
+  document.getElementById('loginEmail').value = demos[role] || '';
+  document.getElementById('loginPass').value = passes[role] || '';
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const alert = document.getElementById('loginAlert');
+  if (STATE.lockedUntil && Date.now() < STATE.lockedUntil) {
+    const mins = Math.ceil((STATE.lockedUntil - Date.now()) / 60000);
+    alert.textContent = `Cuenta bloqueada. Intenta en ${mins} minuto(s).`;
+    alert.classList.remove('hidden');
+    return;
+  }
+  if (!email || !pass) { showAlert(alert, 'Por favor completa todos los campos.'); return; }
+  const user = USERS.find(u => u.email === email && u.pass === pass);
+  if (!user) {
+    STATE.loginAttempts++;
+    if (STATE.loginAttempts >= 5) {
+      STATE.lockedUntil = Date.now() + 15 * 60 * 1000;
+      showAlert(alert, 'Cuenta bloqueada temporalmente por 15 minutos.');
+    } else {
+      showAlert(alert, `Credenciales incorrectas. Intento ${STATE.loginAttempts}/5.`);
+    }
+    return;
+  }
+  if (user.estado === 'inactivo') { showAlert(alert, 'Cuenta inhabilitada. Contacte al administrador.'); return; }
+  STATE.loginAttempts = 0;
+  STATE.user = user;
+  STATE.role = user.rol;
+  initApp();
+}
+
+function doRegister() {
+  const nombre = document.getElementById('regNombre').value.trim();
+  const apellido = document.getElementById('regApellido').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const tel = document.getElementById('regTelefono').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  const alert = document.getElementById('registerAlert');
+  alert.className = 'alert hidden';
+  if (!nombre || !apellido || !email || !pass) { showAlert(alert, 'Por favor completa todos los campos.', 'danger'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert(alert, 'Formato de correo inválido.', 'danger'); return; }
+  if (USERS.find(u => u.email === email)) { showAlert(alert, 'Este correo ya está registrado.', 'danger'); return; }
+  if (pass.length < 8) { showAlert(alert, 'La contraseña debe tener al menos 8 caracteres.', 'danger'); return; }
+  if (pass !== pass2) { showAlert(alert, 'Las contraseñas no coinciden.', 'danger'); return; }
+  const newUser = { id: USERS.length+1, nombre, apellido, email, pass, rol:'cliente', estado:'activo', telefono: tel, fechaRegistro: new Date().toISOString().split('T')[0] };
+  USERS.push(newUser);
+  showAlert(alert, '¡Cuenta creada exitosamente! Redirigiendo...', 'success');
+  showToast('Bienvenido a EventMaster Pro. ¡Cuenta creada!', 'success');
+  setTimeout(() => { STATE.user = newUser; STATE.role = 'cliente'; initApp(); }, 1500);
+}
+
+function showAlert(el, msg, type='danger') {
+  el.textContent = msg;
+  el.className = `alert alert-${type}`;
+}
+
+function showLogin() {
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('registerScreen').classList.add('hidden');
+}
+function showRegister() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('registerScreen').classList.remove('hidden');
+}
+
+function doLogout() {
+  STATE.user = null;
+  document.getElementById('appShell').classList.add('hidden');
+  document.getElementById('authWrap').classList.remove('hidden');
+  showLogin();
+  showToast('Sesión cerrada correctamente.', 'success');
+}
+
+// ============================================================
+//  APP INIT
+// ============================================================
+const NAV_ADMIN = [
+  { label:'Principal', items:[
+    { id:'dashboard', icon:iconHome, label:'Dashboard' },
+  ]},
+  { label:'Gestión', items:[
+    { id:'eventos', icon:iconCalendar, label:'Eventos' },
+    { id:'usuarios', icon:iconUsers, label:'Usuarios' },
+    { id:'proveedores', icon:iconTruck, label:'Proveedores' },
+    { id:'asignaciones', icon:iconLink, label:'Asignaciones' },
+  ]},
+  { label:'Finanzas', items:[
+    { id:'reservas', icon:iconBookmark, label:'Reservas' },
+    { id:'pagos', icon:iconCreditCard, label:'Pagos' },
+  ]},
+  { label:'Sistema', items:[
+    { id:'roles', icon:iconShield, label:'Roles y permisos' },
+    { id:'notificaciones', icon:iconBell, label:'Notificaciones', badge:2 },
+  ]},
+];
+const NAV_CLIENTE = [
+  { label:'Principal', items:[
+    { id:'dashboard', icon:iconHome, label:'Mi panel' },
+    { id:'catalogo', icon:iconSearch, label:'Catálogo de eventos' },
+    { id:'mis-reservas', icon:iconBookmark, label:'Mis reservas' },
+    { id:'mis-pagos', icon:iconCreditCard, label:'Mis pagos' },
+    { id:'notificaciones', icon:iconBell, label:'Notificaciones', badge:1 },
+  ]},
+];
+const NAV_PROVEEDOR = [
+  { label:'Principal', items:[
+    { id:'dashboard', icon:iconHome, label:'Mi panel' },
+    { id:'mis-asignaciones', icon:iconLink, label:'Mis asignaciones', badge:1 },
+    { id:'perfil-servicios', icon:iconSettings, label:'Perfil de servicios' },
+    { id:'notificaciones', icon:iconBell, label:'Notificaciones', badge:1 },
+  ]},
+];
+const NAV_INVITADO = [
+  { label:'Explorar', items:[
+    { id:'catalogo-invitado', icon:iconSearch, label:'Catálogo de eventos' },
+  ]},
+];
+
+function entrarComoInvitado() {
+  STATE.user = null;
+  STATE.role = 'invitado';
+  document.getElementById('authWrap').classList.add('hidden');
+  document.getElementById('appShell').classList.remove('hidden');
+  document.getElementById('sidebarAvatar').textContent = '?';
+  document.getElementById('sidebarAvatar').style.background = '#f1efe8';
+  document.getElementById('sidebarAvatar').style.color = '#5f5e5a';
+  document.getElementById('sidebarName').textContent = 'Usuario Invitado';
+  document.getElementById('sidebarRole').textContent = 'Solo lectura';
+  buildNav();
+  showPage('catalogo-invitado');
+  setTimeout(()=>{ const el=document.getElementById('logoutLabel'); if(el) el.textContent='Volver al inicio'; },100);
+}
+
+function initApp() {
+  document.getElementById('authWrap').classList.add('hidden');
+  document.getElementById('appShell').classList.remove('hidden');
+  const u = STATE.user;
+  document.getElementById('sidebarAvatar').textContent = (u.nombre[0]+u.apellido[0]).toUpperCase();
+  document.getElementById('sidebarName').textContent = u.nombre + ' ' + u.apellido;
+  document.getElementById('sidebarRole').textContent = u.rol.charAt(0).toUpperCase()+u.rol.slice(1);
+  buildNav();
+  showPage('dashboard');
+  showToast(`Bienvenido, ${u.nombre}. Sesión iniciada como ${u.rol}.`, 'success');
+}
+
+function buildNav() {
+  const navMap = { admin: NAV_ADMIN, cliente: NAV_CLIENTE, proveedor: NAV_PROVEEDOR, invitado: NAV_INVITADO };
+  const nav = navMap[STATE.role] || NAV_ADMIN;
+  const container = document.getElementById('navItems');
+  container.innerHTML = nav.map(section => `
+    <div class="nav-section">
+      <div class="nav-section-label">${section.label}</div>
+      ${section.items.map(item => `
+        <div class="nav-item" id="nav-${item.id}" onclick="showPage('${item.id}')">
+          ${item.icon()} ${item.label}
+          ${item.badge ? `<span class="nav-badge">${item.badge}</span>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById('nav-'+id);
+  if (navEl) navEl.classList.add('active');
+  const pages = { admin: renderAdminPage, cliente: renderClientePage, proveedor: renderProveedorPage, invitado: renderInvitadoPage };
+  const r = pages[STATE.role];
+  if (r) r(id);
+}
+
+// ============================================================
+//  ICON HELPERS
+// ============================================================
+function iconHome() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`; }
+function iconCalendar() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`; }
+function iconUsers() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`; }
+function iconTruck() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`; }
+function iconLink() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`; }
+function iconBookmark() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`; }
+function iconCreditCard() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`; }
+function iconShield() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`; }
+function iconBell() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`; }
+function iconSearch() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`; }
+function iconSettings() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`; }
+function iconPlus() { return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`; }
+function iconEdit() { return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`; }
+function iconTrash() { return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`; }
+function iconCheck() { return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`; }
+function iconX() { return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`; }
+
+// ============================================================
+//  ADMIN PAGES
+// ============================================================
+function renderAdminPage(id) {
+  const pages = {
+    dashboard: renderAdminDashboard,
+    eventos: renderEventosPage,
+    usuarios: renderUsuariosPage,
+    proveedores: renderProveedoresPage,
+    asignaciones: renderAsignacionesPage,
+    reservas: renderReservasPage,
+    pagos: renderPagosPage,
+    roles: renderRolesPage,
+    notificaciones: renderNotificacionesPage,
+  };
+  const titleMap = {
+    dashboard:'Dashboard',eventos:'Gestión de Eventos',usuarios:'Gestión de Usuarios',
+    proveedores:'Proveedores',asignaciones:'Asignaciones',reservas:'Reservas',
+    pagos:'Pagos',roles:'Roles y Permisos',notificaciones:'Notificaciones',
+  };
+  document.getElementById('topbarTitle').textContent = titleMap[id] || id;
+  const fn = pages[id];
+  if (fn) { document.getElementById('pageContent').innerHTML = fn(); attachAdminEvents(id); }
+}
+
+function renderAdminDashboard() {
+  const totalEventos = EVENTOS.filter(e=>e.estado!=='cancelado').length;
+  const totalReservas = RESERVAS.length;
+  const totalPagos = PAGOS.filter(p=>p.estado==='completado').reduce((s,p)=>s+p.monto,0);
+  const eventosActivos = EVENTOS.filter(e=>e.estado==='activo').length;
+  return `
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--info-bg); color:var(--info-text)">${iconCalendar()}</div>
+      <div class="stat-label">Eventos activos</div>
+      <div class="stat-value">${eventosActivos}</div>
+      <div class="stat-sub">de ${totalEventos} totales</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--success-bg); color:var(--success-text)">${iconBookmark()}</div>
+      <div class="stat-label">Reservas totales</div>
+      <div class="stat-value">${totalReservas}</div>
+      <div class="stat-sub">${RESERVAS.filter(r=>r.estado==='confirmada').length} confirmadas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--warning-bg); color:var(--warning-text)">${iconCreditCard()}</div>
+      <div class="stat-label">Ingresos confirmados</div>
+      <div class="stat-value">$${(totalPagos/1000000).toFixed(1)}M</div>
+      <div class="stat-sub">CLP</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--danger-bg); color:var(--danger-text)">${iconUsers()}</div>
+      <div class="stat-label">Usuarios activos</div>
+      <div class="stat-value">${USERS.filter(u=>u.estado==='activo').length}</div>
+      <div class="stat-sub">de ${USERS.length} registrados</div>
+    </div>
+  </div>
+  <div class="grid-2" style="gap:20px">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Próximos eventos</span>
+        <button class="btn btn-outline btn-sm" onclick="showPage('eventos')">${iconCalendar()} Ver todos</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Evento</th><th>Fecha</th><th>Estado</th><th>Cupos</th></tr></thead>
+          <tbody>
+            ${EVENTOS.filter(e=>e.estado==='activo').map(e=>`
+            <tr><td><strong>${e.nombre}</strong><br><span class="text-muted text-sm">${e.tipo}</span></td>
+            <td>${formatDate(e.fecha)}</td>
+            <td>${badgeEstado(e.estado)}</td>
+            <td>${e.capacidadDisp}/${e.capacidadMax}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Asignaciones recientes</span></div>
+      <div class="card-body" style="padding:0">
+        ${ASIGNACIONES.map(a => {
+          const ev = EVENTOS.find(e=>e.id===a.idEvento);
+          const pr = PROVEEDORES.find(p=>p.id===a.idProveedor);
+          return `<div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between">
+            <div>
+              <div style="font-size:13px; font-weight:500">${pr?.empresa}</div>
+              <div style="font-size:12px; color:var(--text-muted)">${ev?.nombre} · ${a.servicio}</div>
+            </div>
+            ${badgeAsignacion(a.estado)}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderEventosPage() {
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Eventos</h1><p>Gestiona todos los eventos de la plataforma</p></div>
+    <button class="btn btn-primary" onclick="openEventoModal()">${iconPlus()} Nuevo evento</button>
+  </div>
+  <div class="filters-row">
+    <div class="search-box">
+      ${iconSearch()}<input type="text" class="form-control" id="searchEvento" placeholder="Buscar evento..." oninput="filterEventos()">
+    </div>
+    <select class="form-control form-select filter-select" id="filterTipo" onchange="filterEventos()">
+      <option value="">Todos los tipos</option>
+      <option>Matrimonio</option><option>Cumpleaños</option><option>Corporativo</option>
+    </select>
+    <select class="form-control form-select filter-select" id="filterEstado" onchange="filterEventos()">
+      <option value="">Todos los estados</option>
+      <option>activo</option><option>cancelado</option><option>finalizado</option>
+    </select>
+  </div>
+  <div id="eventosContainer">
+    ${renderEventosTable(EVENTOS)}
+  </div>`;
+}
+
+function renderEventosTable(eventos) {
+  if (!eventos.length) return `<div class="empty-state"><h3>No hay eventos</h3><p>Crea el primer evento con el botón de arriba.</p></div>`;
+  return `<div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Evento</th><th>Tipo</th><th>Fecha</th><th>Lugar</th><th>Capacidad</th><th>Precio base</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody>
+      ${eventos.map(e=>`
+      <tr>
+        <td><strong>${e.nombre}</strong></td>
+        <td><span class="badge badge-brand">${e.tipo}</span></td>
+        <td>${formatDate(e.fecha)} ${e.hora}</td>
+        <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.lugar}</td>
+        <td>${e.capacidadDisp}/${e.capacidadMax}</td>
+        <td>$${e.precioBase.toLocaleString('es-CL')}</td>
+        <td>${badgeEstado(e.estado)}</td>
+        <td>
+          <div class="flex gap-2">
+            <button class="btn btn-ghost btn-sm" onclick="openEventoModal(${e.id})">${iconEdit()}</button>
+            <button class="btn btn-danger btn-sm" onclick="cancelarEvento(${e.id})">${iconTrash()}</button>
+          </div>
+        </td>
+      </tr>`).join('')}
+    </tbody>
+  </table></div></div>`;
+}
+
+function filterEventos() {
+  const q = document.getElementById('searchEvento')?.value.toLowerCase() || '';
+  const tipo = document.getElementById('filterTipo')?.value || '';
+  const estado = document.getElementById('filterEstado')?.value || '';
+  const filtered = EVENTOS.filter(e =>
+    (!q || e.nombre.toLowerCase().includes(q) || e.lugar.toLowerCase().includes(q)) &&
+    (!tipo || e.tipo === tipo) &&
+    (!estado || e.estado === estado)
+  );
+  document.getElementById('eventosContainer').innerHTML = renderEventosTable(filtered);
+}
+
+function openEventoModal(id=null) {
+  const ev = id ? EVENTOS.find(e=>e.id===id) : null;
+  const title = ev ? 'Editar evento' : 'Nuevo evento';
+  showModal(title, `
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Nombre del evento</label>
+        <input type="text" id="evNombre" class="form-control" value="${ev?.nombre||''}" placeholder="Ej: Boda García-Morales">
+      </div>
+      <div class="form-group">
+        <label>Tipo de evento</label>
+        <select id="evTipo" class="form-control form-select">
+          ${['Matrimonio','Cumpleaños','Corporativo','Otro'].map(t=>`<option ${ev?.tipo===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="evFecha" class="form-control" value="${ev?.fecha||''}">
+      </div>
+      <div class="form-group">
+        <label>Hora</label>
+        <input type="time" id="evHora" class="form-control" value="${ev?.hora||''}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Lugar</label>
+      <input type="text" id="evLugar" class="form-control" value="${ev?.lugar||''}" placeholder="Ej: Casona Las Rosas, Vitacura">
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Capacidad máxima</label>
+        <input type="number" id="evCapacidad" class="form-control" value="${ev?.capacidadMax||''}" placeholder="100">
+      </div>
+      <div class="form-group">
+        <label>Precio base (CLP)</label>
+        <input type="number" id="evPrecio" class="form-control" value="${ev?.precioBase||''}" placeholder="500000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea id="evDesc" class="form-control">${ev?.descripcion||''}</textarea>
+    </div>
+    <div id="eventoAlert" class="alert hidden"></div>
+  `, () => guardarEvento(id));
+}
+
+function guardarEvento(id) {
+  const nombre = document.getElementById('evNombre').value.trim();
+  const tipo = document.getElementById('evTipo').value;
+  const fecha = document.getElementById('evFecha').value;
+  const hora = document.getElementById('evHora').value;
+  const lugar = document.getElementById('evLugar').value.trim();
+  const capacidad = parseInt(document.getElementById('evCapacidad').value);
+  const precio = parseInt(document.getElementById('evPrecio').value);
+  const desc = document.getElementById('evDesc').value;
+  const al = document.getElementById('eventoAlert');
+  if (!nombre || !fecha || !lugar || !capacidad || !precio) { showAlert(al,'Completa todos los campos obligatorios.'); return; }
+  if (new Date(fecha) < new Date() && !id) { showAlert(al,'La fecha no puede ser pasada.'); return; }
+  if (id) {
+    const ev = EVENTOS.find(e=>e.id===id);
+    Object.assign(ev, {nombre,tipo,fecha,hora,lugar,capacidadMax:capacidad,precioBase:precio,descripcion:desc});
+    showToast('Evento actualizado correctamente.', 'success');
+  } else {
+    EVENTOS.push({ id:EVENTOS.length+1, nombre, tipo, fecha, hora, lugar, capacidadMax:capacidad, capacidadDisp:capacidad, precioBase:precio, estado:'activo', descripcion:desc, emoji:'🎉' });
+    showToast('Evento creado correctamente.', 'success');
+  }
+  closeModal();
+  renderAdminPage('eventos');
+}
+
+function cancelarEvento(id) {
+  const ev = EVENTOS.find(e=>e.id===id);
+  if (!ev) return;
+  showConfirm(`¿Cancelar el evento "${ev.nombre}"?`, 'Esta acción notificará a todos los participantes.', () => {
+    ev.estado = 'cancelado';
+    NOTIFICACIONES.unshift({ id: Date.now(), mensaje: `Evento "${ev.nombre}" fue cancelado.`, tipo:'evento', leida:false, fecha: new Date().toLocaleString('es-CL'), idDestino:'all' });
+    showToast('Evento cancelado y participantes notificados.', 'warning');
+    renderAdminPage('eventos');
+  });
+}
+
+function renderUsuariosPage() {
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Usuarios</h1><p>Administra las cuentas de acceso al sistema</p></div>
+    <button class="btn btn-primary" onclick="openUsuarioModal()">${iconPlus()} Nuevo usuario</button>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Usuario</th><th>Correo</th><th>Rol</th><th>Teléfono</th><th>Registro</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          ${USERS.map(u=>`
+          <tr>
+            <td><div class="flex items-center gap-2">
+              <div class="avatar ${u.rol==='admin'?'avatar-brand':u.rol==='proveedor'?'avatar-success':'avatar-accent'}">${(u.nombre[0]+u.apellido[0]).toUpperCase()}</div>
+              <div><div style="font-weight:500">${u.nombre} ${u.apellido}</div></div>
+            </div></td>
+            <td style="color:var(--text-muted)">${u.email}</td>
+            <td>${badgeRol(u.rol)}</td>
+            <td>${u.telefono}</td>
+            <td>${formatDate(u.fechaRegistro)}</td>
+            <td>${u.estado==='activo'?'<span class="badge badge-success">Activo</span>':'<span class="badge badge-danger">Inactivo</span>'}</td>
+            <td><div class="flex gap-2">
+              <button class="btn btn-ghost btn-sm" onclick="openUsuarioModal(${u.id})">${iconEdit()}</button>
+              ${u.id !== STATE.user.id ? `<button class="btn btn-danger btn-sm" onclick="toggleUsuario(${u.id})">${u.estado==='activo'?iconTrash():iconCheck()}</button>` : ''}
+            </div></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function openUsuarioModal(id=null) {
+  const u = id ? USERS.find(x=>x.id===id) : null;
+  showModal(id ? 'Editar usuario' : 'Nuevo usuario', `
+    <div class="grid-2">
+      <div class="form-group"><label>Nombre</label><input type="text" id="uNombre" class="form-control" value="${u?.nombre||''}"></div>
+      <div class="form-group"><label>Apellido</label><input type="text" id="uApellido" class="form-control" value="${u?.apellido||''}"></div>
+    </div>
+    <div class="form-group"><label>Correo electrónico</label><input type="email" id="uEmail" class="form-control" value="${u?.email||''}"></div>
+    <div class="form-group"><label>Teléfono</label><input type="tel" id="uTel" class="form-control" value="${u?.telefono||''}"></div>
+    <div class="form-group"><label>Rol</label>
+      <select id="uRol" class="form-control form-select">
+        <option value="admin" ${u?.rol==='admin'?'selected':''}>Administrador</option>
+        <option value="cliente" ${u?.rol==='cliente'?'selected':''}>Cliente</option>
+        <option value="proveedor" ${u?.rol==='proveedor'?'selected':''}>Proveedor</option>
+      </select>
+    </div>
+    ${!id ? `<div class="form-group"><label>Contraseña temporal</label><input type="password" id="uPass" class="form-control" placeholder="Mínimo 8 caracteres"></div>` : ''}
+    <div id="usuarioAlert" class="alert hidden"></div>
+  `, () => guardarUsuario(id));
+}
+
+function guardarUsuario(id) {
+  const nombre = document.getElementById('uNombre').value.trim();
+  const apellido = document.getElementById('uApellido').value.trim();
+  const email = document.getElementById('uEmail').value.trim();
+  const tel = document.getElementById('uTel').value.trim();
+  const rol = document.getElementById('uRol').value;
+  const al = document.getElementById('usuarioAlert');
+  if (!nombre || !apellido || !email) { showAlert(al, 'Completa los campos obligatorios.'); return; }
+  if (USERS.find(u => u.email === email && u.id !== id)) { showAlert(al, 'Este correo ya está registrado.'); return; }
+  if (id) {
+    const u = USERS.find(x=>x.id===id);
+    Object.assign(u, {nombre, apellido, email, telefono: tel, rol});
+    showToast('Usuario actualizado.', 'success');
+  } else {
+    const pass = document.getElementById('uPass')?.value || 'temp1234';
+    USERS.push({ id:USERS.length+1, nombre, apellido, email, pass, rol, estado:'activo', telefono:tel, fechaRegistro: new Date().toISOString().split('T')[0] });
+    showToast('Usuario creado correctamente.', 'success');
+  }
+  closeModal(); renderAdminPage('usuarios');
+}
+
+function toggleUsuario(id) {
+  const u = USERS.find(x=>x.id===id);
+  if (!u) return;
+  const action = u.estado === 'activo' ? 'desactivar' : 'activar';
+  showConfirm(`¿${action.charAt(0).toUpperCase()+action.slice(1)} a ${u.nombre}?`, '', () => {
+    u.estado = u.estado === 'activo' ? 'inactivo' : 'activo';
+    showToast(`Usuario ${action==='desactivar'?'desactivado':'activado'}.`, 'success');
+    renderAdminPage('usuarios');
+  });
+}
+
+function renderProveedoresPage() {
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Proveedores</h1><p>Directorio de proveedores de servicios</p></div>
+    <button class="btn btn-primary" onclick="openProveedorModal()">${iconPlus()} Nuevo proveedor</button>
+  </div>
+  <div class="events-grid">
+    ${PROVEEDORES.map(p=>`
+    <div class="card" style="overflow:visible">
+      <div class="card-body">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="avatar avatar-success" style="width:44px;height:44px;font-size:16px">${p.empresa[0]}</div>
+          <div>
+            <div style="font-weight:500;font-size:14px">${p.empresa}</div>
+            <span class="badge badge-brand">${p.tipo}</span>
+          </div>
+          <div style="margin-left:auto">
+            ${p.disponibilidad?'<span class="badge badge-success">Disponible</span>':'<span class="badge badge-danger">No disponible</span>'}
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">${p.servicios}</div>
+        <div class="flex items-center justify-between">
+          <div style="font-size:13px">⭐ ${p.calificacion} / 5.0</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:15px;color:var(--brand)">$${p.precio.toLocaleString('es-CL')}</div>
+        </div>
+      </div>
+      <div class="card-header" style="border-top:1px solid var(--border);border-bottom:none">
+        <button class="btn btn-ghost btn-sm" onclick="openProveedorModal(${p.id})">${iconEdit()} Editar</button>
+        <button class="btn btn-outline btn-sm" onclick="asignarProveedorDesde(${p.id})">${iconLink()} Asignar</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function openProveedorModal(id=null) {
+  const p = id ? PROVEEDORES.find(x=>x.id===id) : null;
+  showModal(id ? 'Editar proveedor' : 'Nuevo proveedor', `
+    <div class="form-group"><label>Nombre de empresa</label><input type="text" id="pEmpresa" class="form-control" value="${p?.empresa||''}"></div>
+    <div class="grid-2">
+      <div class="form-group"><label>Tipo de servicio</label>
+        <select id="pTipo" class="form-control form-select">
+          ${['Sonido','Decoración','Fotografía','Catering','Transporte','Otro'].map(t=>`<option ${p?.tipo===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label>Precio base (CLP)</label><input type="number" id="pPrecio" class="form-control" value="${p?.precio||''}"></div>
+    </div>
+    <div class="form-group"><label>Descripción de servicios</label><textarea id="pDesc" class="form-control">${p?.servicios||''}</textarea></div>
+    <label class="checkbox-row"><input type="checkbox" id="pDisp" ${p?.disponibilidad?'checked':''}> Disponible para asignaciones</label>
+  `, () => guardarProveedor(id));
+}
+
+function guardarProveedor(id) {
+  const empresa = document.getElementById('pEmpresa').value.trim();
+  const tipo = document.getElementById('pTipo').value;
+  const precio = parseInt(document.getElementById('pPrecio').value) || 0;
+  const desc = document.getElementById('pDesc').value;
+  const disp = document.getElementById('pDisp').checked;
+  if (!empresa) { showToast('Ingresa el nombre de la empresa.', 'warning'); return; }
+  if (id) {
+    const p = PROVEEDORES.find(x=>x.id===id);
+    Object.assign(p, {empresa, tipo, precio, servicios:desc, disponibilidad:disp});
+    showToast('Proveedor actualizado.', 'success');
+  } else {
+    PROVEEDORES.push({ id:PROVEEDORES.length+1, idUsuario:null, empresa, tipo, precio, servicios:desc, calificacion:5.0, disponibilidad:disp });
+    showToast('Proveedor registrado correctamente.', 'success');
+  }
+  closeModal(); renderAdminPage('proveedores');
+}
+
+function asignarProveedorDesde(idProv) { closeModal(); renderAdminPage('asignaciones'); setTimeout(()=>openAsignacionModal(null, idProv), 100); }
+
+function renderAsignacionesPage() {
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Asignaciones</h1><p>Asignación de proveedores a eventos</p></div>
+    <button class="btn btn-primary" onclick="openAsignacionModal()">${iconPlus()} Nueva asignación</button>
+  </div>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Evento</th><th>Proveedor</th><th>Servicio</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody>
+      ${ASIGNACIONES.map(a => {
+        const ev = EVENTOS.find(e=>e.id===a.idEvento);
+        const pr = PROVEEDORES.find(p=>p.id===a.idProveedor);
+        return `<tr>
+          <td><strong>${ev?.nombre||'-'}</strong></td>
+          <td>${pr?.empresa||'-'}</td>
+          <td>${a.servicio}</td>
+          <td>${formatDate(a.fecha)}</td>
+          <td>${badgeAsignacion(a.estado)}</td>
+          <td>${a.estado==='pendiente'?`<div class="flex gap-2">
+            <button class="btn btn-success btn-sm" onclick="responderAsignacion(${a.id},'aceptada')">${iconCheck()} Aceptar</button>
+            <button class="btn btn-danger btn-sm" onclick="responderAsignacion(${a.id},'rechazada')">${iconX()} Rechazar</button>
+          </div>`:''}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table></div></div>`;
+}
+
+function openAsignacionModal(id=null, idProvPre=null) {
+  showModal('Nueva asignación', `
+    <div class="form-group"><label>Evento</label>
+      <select id="asEvento" class="form-control form-select">
+        ${EVENTOS.filter(e=>e.estado==='activo').map(e=>`<option value="${e.id}">${e.nombre}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group"><label>Proveedor</label>
+      <select id="asProveedor" class="form-control form-select">
+        ${PROVEEDORES.filter(p=>p.disponibilidad).map(p=>`<option value="${p.id}" ${p.id===idProvPre?'selected':''}>${p.empresa} (${p.tipo})</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group"><label>Tipo de servicio solicitado</label><input type="text" id="asServicio" class="form-control" placeholder="Ej: Sonido y DJ"></div>
+    <div class="form-group"><label>Fecha de asignación</label><input type="date" id="asFecha" class="form-control" value="${new Date().toISOString().split('T')[0]}"></div>
+  `, () => {
+    const idE = parseInt(document.getElementById('asEvento').value);
+    const idP = parseInt(document.getElementById('asProveedor').value);
+    const serv = document.getElementById('asServicio').value.trim();
+    const fecha = document.getElementById('asFecha').value;
+    if (!serv) { showToast('Especifica el tipo de servicio.', 'warning'); return; }
+    ASIGNACIONES.push({ id:ASIGNACIONES.length+1, idEvento:idE, idProveedor:idP, servicio:serv, estado:'pendiente', fecha, nota:'' });
+    NOTIFICACIONES.unshift({ id:Date.now(), mensaje:`Nueva asignación para ${EVENTOS.find(e=>e.id===idE)?.nombre}`, tipo:'asignacion', leida:false, fecha:new Date().toLocaleString('es-CL'), idDestino:'proveedor' });
+    showToast('Asignación creada. Proveedor notificado.', 'success');
+    closeModal(); renderAdminPage('asignaciones');
+  });
+}
+
+function responderAsignacion(id, estado) {
+  const a = ASIGNACIONES.find(x=>x.id===id);
+  if (!a) return;
+  a.estado = estado;
+  showToast(`Asignación ${estado==='aceptada'?'aceptada':'rechazada'} correctamente.`, estado==='aceptada'?'success':'warning');
+  NOTIFICACIONES.unshift({ id:Date.now(), mensaje:`Asignación fue ${estado}`, tipo:'asignacion', leida:false, fecha:new Date().toLocaleString('es-CL'), idDestino:'admin' });
+  renderAdminPage('asignaciones');
+}
+
+function renderReservasPage() {
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Reservas</h1><p>Registro de reservas de clientes</p></div>
+  </div>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>ID</th><th>Evento</th><th>Cliente</th><th>Personas</th><th>Fecha reserva</th><th>Estado</th><th>Pago</th></tr></thead>
+    <tbody>
+      ${RESERVAS.map(r => {
+        const ev = EVENTOS.find(e=>e.id===r.idEvento);
+        const cl = USERS.find(u=>u.id===r.idUsuario);
+        const pago = PAGOS.find(p=>p.idReserva===r.id);
+        return `<tr>
+          <td><span class="badge badge-gray">#${r.id}</span></td>
+          <td><strong>${ev?.nombre||'-'}</strong></td>
+          <td>${cl?.nombre} ${cl?.apellido||'-'}</td>
+          <td>${r.cantPersonas} personas</td>
+          <td>${formatDate(r.fechaReserva)}</td>
+          <td>${badgeReserva(r.estado)}</td>
+          <td>${pago ? badgePago(pago.estado) : '<span class="badge badge-gray">Sin pago</span>'}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table></div></div>`;
+}
+
+function renderPagosPage() {
+  const total = PAGOS.filter(p=>p.estado==='completado').reduce((s,p)=>s+p.monto,0);
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Pagos</h1><p>Historial de transacciones del sistema</p></div>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-label">Total recaudado</div>
+      <div class="stat-value">$${(total/1000000).toFixed(1)}M</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Transacciones completas</div>
+      <div class="stat-value">${PAGOS.filter(p=>p.estado==='completado').length}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pendientes</div>
+      <div class="stat-value">${PAGOS.filter(p=>p.estado==='pendiente').length}</div>
+    </div>
+  </div>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Nº Transacción</th><th>Reserva</th><th>Monto</th><th>Método</th><th>Estado</th><th>Fecha</th></tr></thead>
+    <tbody>
+      ${PAGOS.map(p=>{
+        const r = RESERVAS.find(x=>x.id===p.idReserva);
+        const ev = r ? EVENTOS.find(e=>e.id===r.idEvento) : null;
+        return `<tr>
+          <td><code style="font-size:11px">${p.numTrans||'—'}</code></td>
+          <td>${ev?.nombre||'-'}</td>
+          <td style="font-family:'DM Serif Display',serif;font-size:15px">$${p.monto.toLocaleString('es-CL')}</td>
+          <td><span class="badge badge-brand">${p.metodo}</span></td>
+          <td>${badgePago(p.estado)}</td>
+          <td>${p.fecha?formatDate(p.fecha):'—'}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table></div></div>`;
+}
+
+function renderRolesPage() {
+  const roles = [
+    { nombre:'Administrador', desc:'Acceso completo al sistema. Gestiona eventos, usuarios, proveedores, reservas y pagos.', permisos:['Gestión de eventos','Gestión de usuarios','Asignación de proveedores','Ver y gestionar reservas','Ver y gestionar pagos','Configurar roles'], color:'info' },
+    { nombre:'Cliente', desc:'Puede consultar el catálogo, reservar eventos y realizar pagos.', permisos:['Consultar eventos','Reservar eventos','Realizar pagos','Ver sus reservas','Gestionar su perfil'], color:'warning' },
+    { nombre:'Proveedor', desc:'Puede ver sus asignaciones, responderlas y gestionar su perfil de servicios.', permisos:['Ver eventos asignados','Aceptar/rechazar asignaciones','Gestionar perfil de servicios','Recibir notificaciones'], color:'success' },
+    { nombre:'Usuario Invitado', desc:'Acceso de solo lectura al catálogo de eventos públicos.', permisos:['Consultar catálogo de eventos','Registrarse en la plataforma'], color:'gray' },
+  ];
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Roles y permisos</h1><p>Control de acceso basado en roles (RBAC)</p></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    ${roles.map(r=>`
+    <div class="card">
+      <div class="card-header"><span class="card-title">${r.nombre}</span><span class="badge badge-${r.color}">${r.color==='info'?'Admin':r.nombre.split(' ')[0]}</span></div>
+      <div class="card-body">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">${r.desc}</p>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${r.permisos.map(p=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="color:var(--success-text)">${iconCheck()}</span>${p}</div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderNotificacionesPage() {
+  const notifs = NOTIFICACIONES.filter(n => n.idDestino === STATE.role || n.idDestino === 'all');
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Notificaciones</h1><p>Centro de alertas del sistema</p></div>
+    <button class="btn btn-outline btn-sm" onclick="marcarTodasLeidas()">Marcar todas como leídas</button>
+  </div>
+  <div class="card">
+    ${notifs.length ? notifs.map(n=>`
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;${!n.leida?'background:var(--info-bg);':''}">
+      <div style="width:8px;height:8px;border-radius:50%;background:${!n.leida?'var(--accent)':'var(--border)'};margin-top:5px;flex-shrink:0"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:${!n.leida?'500':'400'}">${n.mensaje}</div>
+        <div style="font-size:11px;color:var(--text-hint);margin-top:3px">${n.fecha} · <span class="badge badge-brand" style="font-size:10px">${n.tipo}</span></div>
+      </div>
+      ${!n.leida?`<button class="btn btn-ghost btn-sm" onclick="marcarLeida(${n.id})">${iconCheck()}</button>`:''}
+    </div>`).join('') : '<div class="empty-state"><h3>Sin notificaciones</h3><p>No hay notificaciones para mostrar.</p></div>'}
+  </div>`;
+}
+
+function marcarLeida(id) {
+  const n = NOTIFICACIONES.find(x=>x.id===id);
+  if (n) n.leida = true;
+  renderAdminPage('notificaciones');
+}
+
+function marcarTodasLeidas() {
+  NOTIFICACIONES.forEach(n => { if(n.idDestino===STATE.role||n.idDestino==='all') n.leida=true; });
+  renderAdminPage('notificaciones');
+  showToast('Todas las notificaciones marcadas como leídas.', 'success');
+}
+
+function attachAdminEvents(id) {}
+
+// ============================================================
+//  CLIENTE PAGES
+// ============================================================
+function renderClientePage(id) {
+  const titleMap = { dashboard:'Mi panel', catalogo:'Catálogo de Eventos', 'mis-reservas':'Mis Reservas', 'mis-pagos':'Mis Pagos', notificaciones:'Notificaciones', reservar:'Reservar Evento', pagar:'Realizar Pago' };
+  document.getElementById('topbarTitle').textContent = titleMap[id] || id;
+  const pages = { dashboard: renderClienteDashboard, catalogo: renderCatalogoPage, 'mis-reservas': renderMisReservas, 'mis-pagos': renderMisPagos, notificaciones: renderNotificacionesPage };
+  const fn = pages[id];
+  if (fn) document.getElementById('pageContent').innerHTML = fn();
+}
+
+function renderClienteDashboard() {
+  const misReservas = RESERVAS.filter(r=>r.idUsuario===STATE.user.id);
+  const misPagos = PAGOS.filter(p=>misReservas.find(r=>r.id===p.idReserva));
+  return `
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Mis reservas</div><div class="stat-value">${misReservas.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Confirmadas</div><div class="stat-value">${misReservas.filter(r=>r.estado==='confirmada').length}</div></div>
+    <div class="stat-card"><div class="stat-label">Pagos completados</div><div class="stat-value">${misPagos.filter(p=>p.estado==='completado').length}</div></div>
+    <div class="stat-card"><div class="stat-label">Eventos disponibles</div><div class="stat-value">${EVENTOS.filter(e=>e.estado==='activo').length}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Eventos disponibles para reservar</span>
+      <button class="btn btn-primary btn-sm" onclick="showPage('catalogo')">Ver catálogo completo</button>
+    </div>
+    <div class="card-body" style="padding:16px">
+      <div class="events-grid">
+        ${EVENTOS.filter(e=>e.estado==='activo').slice(0,3).map(e=>renderEventCard(e)).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCatalogoPage() {
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Catálogo de Eventos</h1><p>Explora y reserva los eventos disponibles</p></div>
+  </div>
+  <div class="filters-row">
+    <div class="search-box">
+      ${iconSearch()}<input type="text" class="form-control" id="searchCat" placeholder="Buscar evento..." oninput="filterCatalogo()">
+    </div>
+    <select class="form-control form-select filter-select" id="filterCatTipo" onchange="filterCatalogo()">
+      <option value="">Todos los tipos</option>
+      <option>Matrimonio</option><option>Cumpleaños</option><option>Corporativo</option>
+    </select>
+  </div>
+  <div id="catalogoContainer" class="events-grid">
+    ${EVENTOS.filter(e=>e.estado==='activo').map(e=>renderEventCard(e)).join('')}
+  </div>`;
+}
+
+function renderEventCard(e) {
+  const colors = { Matrimonio:'#fbeaf0', Cumpleaños:'#faeeda', Corporativo:'#e6f1fb', Otro:'#eaf3de' };
+  const bg = colors[e.tipo] || '#f1efe8';
+  return `
+  <div class="event-card" onclick="openReservarModal(${e.id})">
+    <div class="event-card-img" style="background:${bg}">${e.emoji}</div>
+    <div class="event-card-body">
+      <div class="event-card-type">${e.tipo}</div>
+      <div class="event-card-name">${e.nombre}</div>
+      <div class="event-card-meta">
+        <span>📅 ${formatDate(e.fecha)} · ${e.hora}</span>
+        <span>📍 ${e.lugar.split(',')[0]}</span>
+        <span>👥 ${e.capacidadDisp} cupos disponibles</span>
+      </div>
+    </div>
+    <div class="event-card-footer">
+      <div class="event-price">$${e.precioBase.toLocaleString('es-CL')}<span style="font-size:11px;font-weight:400;color:var(--text-muted)">/pers.</span></div>
+      <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openReservarModal(${e.id})">Reservar</button>
+    </div>
+  </div>`;
+}
+
+function filterCatalogo() {
+  const q = document.getElementById('searchCat')?.value.toLowerCase() || '';
+  const tipo = document.getElementById('filterCatTipo')?.value || '';
+  const filtered = EVENTOS.filter(e => e.estado==='activo' && (!q || e.nombre.toLowerCase().includes(q)) && (!tipo || e.tipo===tipo));
+  document.getElementById('catalogoContainer').innerHTML = filtered.length ?
+    filtered.map(e=>renderEventCard(e)).join('') :
+    '<div class="empty-state" style="grid-column:1/-1"><h3>Sin resultados</h3><p>Intenta con otros filtros.</p></div>';
+}
+
+function openReservarModal(idEvento) {
+  const ev = EVENTOS.find(e=>e.id===idEvento);
+  if (!ev) return;
+  if (!STATE.user) { showToast('Debes iniciar sesión para reservar.', 'warning'); return; }
+  let personas = 1;
+  showModal(`Reservar: ${ev.nombre}`, `
+    <div style="background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:16px">
+      <div class="flex items-center gap-3">
+        <div style="font-size:28px">${ev.emoji}</div>
+        <div>
+          <div style="font-weight:500">${ev.nombre}</div>
+          <div style="font-size:12px;color:var(--text-muted)">${formatDate(ev.fecha)} · ${ev.hora}</div>
+          <div style="font-size:12px;color:var(--text-muted)">📍 ${ev.lugar}</div>
+        </div>
+      </div>
+    </div>
+    ${ev.capacidadDisp === 0 ? `
+      <div class="alert alert-warning">Este evento no tiene cupos disponibles. ¿Deseas unirte a la lista de espera?</div>
+      <button class="btn btn-accent btn-block" onclick="joinWaitlist(${idEvento})">Unirse a lista de espera</button>
+    ` : `
+      <div class="form-group">
+        <label>Número de personas</label>
+        <div class="flex items-center gap-3">
+          <button class="btn btn-outline" onclick="cambiarPersonas(-1,${idEvento})" id="btnMenos">−</button>
+          <span style="font-size:20px;font-weight:500;min-width:40px;text-align:center" id="numPersonas">1</span>
+          <button class="btn btn-outline" onclick="cambiarPersonas(1,${idEvento})" id="btnMas">+</button>
+          <span style="font-size:12px;color:var(--text-muted)">(máx. ${Math.min(ev.capacidadDisp,10)})</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="flex justify-between" style="font-size:14px">
+        <span>Precio por persona:</span>
+        <span>$${ev.precioBase.toLocaleString('es-CL')}</span>
+      </div>
+      <div class="flex justify-between mt-2" style="font-size:17px;font-family:'DM Serif Display',serif">
+        <span>Total:</span>
+        <span id="totalReserva">$${ev.precioBase.toLocaleString('es-CL')}</span>
+      </div>
+    `}
+  `, ev.capacidadDisp > 0 ? () => procesarReserva(idEvento) : null, ev.capacidadDisp > 0 ? 'Confirmar y pagar' : null);
+}
+
+let _reservaPersonas = 1;
+function cambiarPersonas(delta, idEvento) {
+  const ev = EVENTOS.find(e=>e.id===idEvento);
+  const max = Math.min(ev?.capacidadDisp||1, 10);
+  _reservaPersonas = Math.max(1, Math.min(max, _reservaPersonas + delta));
+  document.getElementById('numPersonas').textContent = _reservaPersonas;
+  document.getElementById('totalReserva').textContent = '$' + (ev.precioBase * _reservaPersonas).toLocaleString('es-CL');
+}
+
+function joinWaitlist(idEvento) {
+  showToast('Te has unido a la lista de espera. Te notificaremos cuando haya disponibilidad.', 'success');
+  closeModal();
+}
+
+function procesarReserva(idEvento) {
+  const ev = EVENTOS.find(e=>e.id===idEvento);
+  if (!ev || ev.capacidadDisp < _reservaPersonas) { showToast('Sin disponibilidad suficiente.', 'danger'); return; }
+  const nuevaReserva = {
+    id: RESERVAS.length+1, idEvento, idUsuario: STATE.user.id,
+    fechaReserva: new Date().toISOString().split('T')[0],
+    cantPersonas: _reservaPersonas, estado: 'pendiente'
+  };
+  RESERVAS.push(nuevaReserva);
+  ev.capacidadDisp -= _reservaPersonas;
+  NOTIFICACIONES.unshift({ id:Date.now(), mensaje:`Reserva creada para ${ev.nombre}`, tipo:'reserva', leida:false, fecha:new Date().toLocaleString('es-CL'), idDestino:'cliente' });
+  closeModal();
+  _reservaPersonas = 1;
+  setTimeout(() => abrirPagoModal(nuevaReserva.id), 300);
+}
+
+function abrirPagoModal(idReserva) {
+  const r = RESERVAS.find(x=>x.id===idReserva);
+  const ev = r ? EVENTOS.find(e=>e.id===r.idEvento) : null;
+  if (!r || !ev) return;
+  const monto = ev.precioBase * r.cantPersonas;
+  let metodoSel = 'credito';
+  showModal('Realizar pago', `
+    <div style="background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:16px">
+      <div style="font-weight:500;margin-bottom:4px">${ev.nombre}</div>
+      <div style="font-size:12px;color:var(--text-muted)">${r.cantPersonas} persona(s) · ${formatDate(ev.fecha)}</div>
+      <div style="font-size:20px;font-family:'DM Serif Display',serif;margin-top:8px">Total: $${monto.toLocaleString('es-CL')}</div>
+    </div>
+    <div class="payment-methods">
+      <div class="payment-method-card selected" id="pm-credito" onclick="selectPM('credito')">
+        <div class="method-icon">💳</div>
+        <div class="method-name">Tarjeta de crédito</div>
+      </div>
+      <div class="payment-method-card" id="pm-debito" onclick="selectPM('debito')">
+        <div class="method-icon">🏦</div>
+        <div class="method-name">Tarjeta de débito</div>
+      </div>
+    </div>
+    <div id="camposTarjeta">
+      <div class="form-group"><label>Número de tarjeta</label><input type="text" class="form-control" id="cardNum" maxlength="19" placeholder="1234 5678 9012 3456" oninput="formatCard(this)"></div>
+      <div class="grid-2">
+        <div class="form-group"><label>Vencimiento</label><input type="text" class="form-control" placeholder="MM/AA" maxlength="5"></div>
+        <div class="form-group"><label>CVV</label><input type="text" class="form-control" placeholder="123" maxlength="3"></div>
+      </div>
+      <div class="form-group"><label>Nombre en la tarjeta</label><input type="text" class="form-control" placeholder="${STATE.user.nombre} ${STATE.user.apellido}"></div>
+    </div>
+    <div id="pagoAlert" class="alert hidden"></div>
+    <div style="font-size:11px;color:var(--text-hint);text-align:center;margin-top:8px">🔒 Pago procesado por WebPay/Flow · Conexión segura HTTPS/TLS</div>
+  `, () => confirmarPago(idReserva, monto, metodoSel));
+  window._metodoSel = 'credito';
+}
+
+function selectPM(m) {
+  window._metodoSel = m;
+  document.querySelectorAll('.payment-method-card').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('pm-'+m).classList.add('selected');
+}
+
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+function confirmarPago(idReserva, monto, metodo) {
+  const cardNum = document.getElementById('cardNum').value.replace(/\s/g,'');
+  const al = document.getElementById('pagoAlert');
+  if (cardNum.length < 16) { showAlert(al, 'Ingresa un número de tarjeta válido de 16 dígitos.'); return; }
+  const reserva = RESERVAS.find(r=>r.id===idReserva);
+  const ev = EVENTOS.find(e=>e.id===reserva.idEvento);
+  const pago = {
+    id: PAGOS.length+1, idReserva, monto, metodo: window._metodoSel||metodo,
+    estado:'completado', fecha: new Date().toISOString().split('T')[0],
+    numTrans: 'TXN-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-4)
+  };
+  PAGOS.push(pago);
+  reserva.estado = 'confirmada';
+  NOTIFICACIONES.unshift({ id:Date.now(), mensaje:`Pago confirmado para ${ev?.nombre}. Nº: ${pago.numTrans}`, tipo:'pago', leida:false, fecha:new Date().toLocaleString('es-CL'), idDestino:'cliente' });
+  closeModal();
+  showToast(`¡Pago exitoso! Comprobante: ${pago.numTrans}`, 'success');
+  renderClientePage('mis-reservas');
+}
+
+function renderMisReservas() {
+  const mis = RESERVAS.filter(r=>r.idUsuario===STATE.user.id);
+  return `
+  <div class="page-header">
+    <div class="page-header-text"><h1>Mis reservas</h1></div>
+    <button class="btn btn-primary btn-sm" onclick="showPage('catalogo')">${iconPlus()} Nueva reserva</button>
+  </div>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Evento</th><th>Personas</th><th>Fecha reserva</th><th>Estado</th><th>Pago</th><th>Acciones</th></tr></thead>
+    <tbody>
+      ${mis.length ? mis.map(r => {
+        const ev = EVENTOS.find(e=>e.id===r.idEvento);
+        const pago = PAGOS.find(p=>p.idReserva===r.id);
+        return `<tr>
+          <td><strong>${ev?.nombre||'-'}</strong><br><span style="font-size:11px;color:var(--text-muted)">${formatDate(ev?.fecha)} · ${ev?.lugar?.split(',')[0]}</span></td>
+          <td>${r.cantPersonas}</td>
+          <td>${formatDate(r.fechaReserva)}</td>
+          <td>${badgeReserva(r.estado)}</td>
+          <td>${pago ? badgePago(pago.estado) : '<span class="badge badge-gray">Pendiente</span>'}</td>
+          <td>${r.estado==='pendiente' && !pago ? `<button class="btn btn-accent btn-sm" onclick="abrirPagoModal(${r.id})">Pagar ahora</button>` : ''}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:32px">No tienes reservas aún. <a onclick="showPage(\'catalogo\')" style="color:var(--brand);cursor:pointer">Explora el catálogo</a></td></tr>'}
+    </tbody>
+  </table></div></div>`;
+}
+
+function renderMisPagos() {
+  const misR = RESERVAS.filter(r=>r.idUsuario===STATE.user.id);
+  const misP = PAGOS.filter(p=>misR.find(r=>r.id===p.idReserva));
+  return `
+  <div class="page-header"><div class="page-header-text"><h1>Mis pagos</h1></div></div>
+  <div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Nº Transacción</th><th>Evento</th><th>Monto</th><th>Método</th><th>Estado</th><th>Fecha</th></tr></thead>
+    <tbody>
+      ${misP.length ? misP.map(p=>{
+        const r = misR.find(x=>x.id===p.idReserva);
+        const ev = r ? EVENTOS.find(e=>e.id===r.idEvento) : null;
+        return `<tr><td><code style="font-size:11px">${p.numTrans||'—'}</code></td><td>${ev?.nombre||'-'}</td>
+          <td style="font-family:'DM Serif Display',serif;font-size:15px">$${p.monto.toLocaleString('es-CL')}</td>
+          <td><span class="badge badge-brand">${p.metodo}</span></td>
+          <td>${badgePago(p.estado)}</td><td>${p.fecha||'—'}</td></tr>`;
+      }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:32px">Sin historial de pagos.</td></tr>'}
+    </tbody>
+  </table></div></div>`;
+}
+
+// ============================================================
+//  PROVEEDOR PAGES
+// ============================================================
+function renderProveedorPage(id) {
+  const titleMap = { dashboard:'Mi panel', 'mis-asignaciones':'Mis Asignaciones', 'perfil-servicios':'Perfil de Servicios', notificaciones:'Notificaciones' };
+  document.getElementById('topbarTitle').textContent = titleMap[id] || id;
+  const pages = { dashboard: renderProveedorDashboard, 'mis-asignaciones': renderMisAsignaciones, 'perfil-servicios': renderPerfilServicios, notificaciones: renderNotificacionesPage };
+  const fn = pages[id];
+  if (fn) document.getElementById('pageContent').innerHTML = fn();
+}
+
+function renderProveedorDashboard() {
+  const p = PROVEEDORES.find(x=>x.idUsuario===STATE.user.id);
+  const misA = ASIGNACIONES.filter(a=>p&&a.idProveedor===p.id);
+  return `
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Asignaciones totales</div><div class="stat-value">${misA.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Aceptadas</div><div class="stat-value">${misA.filter(a=>a.estado==='aceptada').length}</div></div>
+    <div class="stat-card"><div class="stat-label">Pendientes</div><div class="stat-value">${misA.filter(a=>a.estado==='pendiente').length}</div></div>
+    <div class="stat-card"><div class="stat-label">Calificación</div><div class="stat-value">${p?.calificacion||'—'}</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Mis asignaciones recientes</span>
+      <button class="btn btn-outline btn-sm" onclick="showPage('mis-asignaciones')">Ver todas</button>
+    </div>
+    ${p ? renderAsignacionesProveedor(p.id, true) : '<div class="empty-state"><h3>Perfil no configurado</h3><p>Configura tu perfil de servicios para recibir asignaciones.</p></div>'}
+  </div>`;
+}
+
+function renderMisAsignaciones() {
+  const p = PROVEEDORES.find(x=>x.idUsuario===STATE.user.id);
+  return `
+  <div class="page-header"><div class="page-header-text"><h1>Mis asignaciones</h1><p>Eventos que tienes asignados</p></div></div>
+  ${p ? renderAsignacionesProveedor(p.id, false) : '<div class="card"><div class="empty-state"><h3>Sin perfil de proveedor</h3><p>Configura tu perfil para recibir asignaciones.</p></div></div>'}`;
+}
+
+function renderAsignacionesProveedor(idProv, compact) {
+  const misA = ASIGNACIONES.filter(a=>a.idProveedor===idProv);
+  if (!misA.length) return '<div class="card-body"><p style="color:var(--text-muted);font-size:13px">Sin asignaciones aún.</p></div>';
+  return `<div class="table-wrap"><table>
+    <thead><tr><th>Evento</th><th>Servicio</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody>
+      ${misA.slice(0, compact?3:999).map(a=>{
+        const ev = EVENTOS.find(e=>e.id===a.idEvento);
+        return `<tr>
+          <td><strong>${ev?.nombre||'-'}</strong><br><span style="font-size:11px;color:var(--text-muted)">${formatDate(ev?.fecha)}</span></td>
+          <td>${a.servicio}</td>
+          <td>${formatDate(a.fecha)}</td>
+          <td>${badgeAsignacion(a.estado)}</td>
+          <td>${a.estado==='pendiente'?`
+            <div class="flex gap-2">
+              <button class="btn btn-success btn-sm" onclick="provRespuesta(${a.id},'aceptada')">${iconCheck()} Aceptar</button>
+              <button class="btn btn-danger btn-sm" onclick="provRespuesta(${a.id},'rechazada')">${iconX()} Rechazar</button>
+            </div>`:''}
+          </td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
+function provRespuesta(id, estado) {
+  const a = ASIGNACIONES.find(x=>x.id===id);
+  if (!a) return;
+  a.estado = estado;
+  NOTIFICACIONES.unshift({ id:Date.now(), mensaje:`Asignación respondida: ${estado}`, tipo:'asignacion', leida:false, fecha:new Date().toLocaleString('es-CL'), idDestino:'admin' });
+  showToast(`Asignación ${estado} correctamente. Administrador notificado.`, 'success');
+  renderProveedorPage('mis-asignaciones');
+}
+
+function renderPerfilServicios() {
+  const p = PROVEEDORES.find(x=>x.idUsuario===STATE.user.id) || { empresa:'', tipo:'Sonido', precio:0, servicios:'', calificacion:5.0, disponibilidad:true };
+  return `
+  <div class="page-header"><div class="page-header-text"><h1>Perfil de servicios</h1></div></div>
+  <div class="card" style="max-width:600px">
+    <div class="card-header"><span class="card-title">Información del proveedor</span></div>
+    <div class="card-body">
+      <div class="form-group"><label>Nombre de empresa</label><input type="text" id="ppEmpresa" class="form-control" value="${p.empresa}"></div>
+      <div class="grid-2">
+        <div class="form-group"><label>Tipo de servicio</label>
+          <select id="ppTipo" class="form-control form-select">
+            ${['Sonido','Decoración','Fotografía','Catering','Transporte','Otro'].map(t=>`<option ${p.tipo===t?'selected':''}>${t}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group"><label>Precio base (CLP)</label><input type="number" id="ppPrecio" class="form-control" value="${p.precio}"></div>
+      </div>
+      <div class="form-group"><label>Descripción de servicios</label><textarea id="ppDesc" class="form-control">${p.servicios}</textarea></div>
+      <label class="checkbox-row"><input type="checkbox" id="ppDisp" ${p.disponibilidad?'checked':''}> Disponible para nuevas asignaciones</label>
+      <div class="mt-4"><button class="btn btn-primary" onclick="guardarPerfilProv()">Guardar cambios</button></div>
+    </div>
+  </div>`;
+}
+
+function guardarPerfilProv() {
+  const empresa = document.getElementById('ppEmpresa').value.trim();
+  const tipo = document.getElementById('ppTipo').value;
+  const precio = parseInt(document.getElementById('ppPrecio').value)||0;
+  const desc = document.getElementById('ppDesc').value;
+  const disp = document.getElementById('ppDisp').checked;
+  if (!empresa) { showToast('Ingresa el nombre de tu empresa.', 'warning'); return; }
+  if (precio <= 0) { showToast('El precio debe ser mayor a cero.', 'warning'); return; }
+  let p = PROVEEDORES.find(x=>x.idUsuario===STATE.user.id);
+  if (p) { Object.assign(p, {empresa, tipo, precio, servicios:desc, disponibilidad:disp}); }
+  else { PROVEEDORES.push({ id:PROVEEDORES.length+1, idUsuario:STATE.user.id, empresa, tipo, precio, servicios:desc, calificacion:5.0, disponibilidad:disp }); }
+  showToast('Perfil de servicios actualizado. Los cambios son visibles para el administrador.', 'success');
+  renderProveedorPage('perfil-servicios');
+}
+
+// ============================================================
+//  INVITADO PAGE
+// ============================================================
+function renderInvitadoPage(id) {
+  document.getElementById('topbarTitle').textContent = 'Catálogo de Eventos';
+  document.getElementById('pageContent').innerHTML = `
+    <div style="background:var(--info-bg);border:1px solid #b5d4f4;border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--info-text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span style="font-size:13px;color:var(--info-text)">Estás navegando como <strong>usuario invitado</strong> en modo solo lectura. Regístrate para reservar eventos.</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0">
+        <button class="btn btn-outline btn-sm" onclick="volverAlLogin()">Iniciar sesión</button>
+        <button class="btn btn-primary btn-sm" onclick="volverAlRegistro()">Registrarse</button>
+      </div>
+    </div>
+    <div class="page-header">
+      <div class="page-header-text"><h1>Catálogo de Eventos</h1><p>Explora los eventos disponibles</p></div>
+    </div>
+    <div class="filters-row">
+      <div class="search-box">
+        ${iconSearch()}<input type="text" class="form-control" id="searchInv" placeholder="Buscar evento..." oninput="filterInvitado()">
+      </div>
+      <select class="form-control form-select filter-select" id="filterInvTipo" onchange="filterInvitado()">
+        <option value="">Todos los tipos</option>
+        <option>Matrimonio</option><option>Cumpleaños</option><option>Corporativo</option>
+      </select>
+    </div>
+    <div id="catalogoInvContainer" class="events-grid">
+      ${EVENTOS.filter(e=>e.estado==='activo').map(e=>renderEventCardInvitado(e)).join('')}
+    </div>
+  `;
+}
+
+function renderEventCardInvitado(e) {
+  const colors = { Matrimonio:'#fbeaf0', Cumpleaños:'#faeeda', Corporativo:'#e6f1fb', Otro:'#eaf3de' };
+  const bg = colors[e.tipo] || '#f1efe8';
+  return `
+  <div class="event-card">
+    <div class="event-card-img" style="background:${bg}">${e.emoji}</div>
+    <div class="event-card-body">
+      <div class="event-card-type">${e.tipo}</div>
+      <div class="event-card-name">${e.nombre}</div>
+      <div class="event-card-meta">
+        <span>📅 ${formatDate(e.fecha)} · ${e.hora}</span>
+        <span>📍 ${e.lugar.split(',')[0]}</span>
+        <span>👥 ${e.capacidadDisp} cupos disponibles</span>
+      </div>
+    </div>
+    <div class="event-card-footer">
+      <div class="event-price">$${e.precioBase.toLocaleString('es-CL')}<span style="font-size:11px;font-weight:400;color:var(--text-muted)">/pers.</span></div>
+      <button class="btn btn-outline btn-sm" onclick="promptRegistro()" title="Regístrate para reservar">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Reservar
+      </button>
+    </div>
+  </div>`;
+}
+
+function filterInvitado() {
+  const q = document.getElementById('searchInv')?.value.toLowerCase() || '';
+  const tipo = document.getElementById('filterInvTipo')?.value || '';
+  const filtered = EVENTOS.filter(e => e.estado==='activo' && (!q || e.nombre.toLowerCase().includes(q)) && (!tipo || e.tipo===tipo));
+  document.getElementById('catalogoInvContainer').innerHTML = filtered.length ?
+    filtered.map(e=>renderEventCardInvitado(e)).join('') :
+    '<div class="empty-state" style="grid-column:1/-1"><h3>Sin resultados</h3><p>Intenta con otros filtros.</p></div>';
+}
+
+function promptRegistro() {
+  showModal('Inicia sesión o regístrate', `
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">Para reservar un evento necesitas tener una cuenta en EventMaster Pro. Es rápido y gratuito.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeModal();volverAlLogin()">Iniciar sesión</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="closeModal();volverAlRegistro()">Registrarse gratis</button>
+    </div>
+  `);
+}
+
+function volverAlLogin() {
+  STATE.role = 'admin';
+  STATE.user = null;
+  document.getElementById('appShell').classList.add('hidden');
+  document.getElementById('authWrap').classList.remove('hidden');
+  showLogin();
+}
+
+function volverAlRegistro() {
+  STATE.role = 'admin';
+  STATE.user = null;
+  document.getElementById('appShell').classList.add('hidden');
+  document.getElementById('authWrap').classList.remove('hidden');
+  showRegister();
+}
+
+// ============================================================
+//  MODAL HELPERS
+// ============================================================
+function showModal(title, body, onConfirm=null, confirmLabel='Guardar') {
+  const html = `
+  <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">${title}</span>
+        <button class="btn-close" onclick="closeModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">${body}</div>
+      ${onConfirm ? `<div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="onConfirmCb()">${confirmLabel}</button>
+      </div>` : ''}
+    </div>
+  </div>`;
+  document.getElementById('modalContainer').innerHTML = html;
+  window._modalConfirmCb = onConfirm;
+}
+
+function onConfirmCb() { if(window._modalConfirmCb) window._modalConfirmCb(); }
+function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
+function handleOverlayClick(e) { if(e.target.id==='modalOverlay') closeModal(); }
+
+function showConfirm(title, body, onConfirm) {
+  showModal(title, `<p style="color:var(--text-muted);font-size:14px">${body}</p>`, onConfirm, 'Confirmar');
+}
+
+// ============================================================
+//  TOAST
+// ============================================================
+function showToast(msg, type='success') {
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success:'✓', danger:'✕', warning:'⚠' };
+  el.innerHTML = `<span style="color:var(--${type==='success'?'success-text':type==='danger'?'danger-text':'warning-text'})">${icons[type]||'ℹ'}</span> ${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300); }, 3500);
+}
+
+// ============================================================
+//  BADGE HELPERS
+// ============================================================
+function badgeEstado(e) {
+  const m = { activo:'badge-success', cancelado:'badge-danger', finalizado:'badge-gray' };
+  return `<span class="badge ${m[e]||'badge-gray'}">${e}</span>`;
+}
+function badgeReserva(e) {
+  const m = { pendiente:'badge-warning', confirmada:'badge-success', cancelada:'badge-danger' };
+  return `<span class="badge ${m[e]||'badge-gray'}">${e}</span>`;
+}
+function badgePago(e) {
+  const m = { pendiente:'badge-warning', completado:'badge-success', rechazado:'badge-danger' };
+  return `<span class="badge ${m[e]||'badge-gray'}">${e}</span>`;
+}
+function badgeAsignacion(e) {
+  const m = { pendiente:'badge-warning', aceptada:'badge-success', rechazada:'badge-danger' };
+  return `<span class="badge ${m[e]||'badge-gray'}">${e}</span>`;
+}
+function badgeRol(r) {
+  const m = { admin:'badge-info', cliente:'badge-accent', proveedor:'badge-success' };
+  return `<span class="badge ${m[r]||'badge-gray'}">${r}</span>`;
+}
+function formatDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return `${day} ${meses[parseInt(m)-1]} ${y}`;
+}
+</script>
+</body>
+</html>
