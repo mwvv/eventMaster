@@ -56,5 +56,65 @@ function goToLogin() {
   enterAsRole('admin');
 }
 
+// ============================================================
+//  GSAP SCROLL ANIMATIONS
+// ============================================================
+function initLandingAnimations() {
+  if (typeof gsap === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // — Hero: timeline de entrada en cascada —
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  tl.from('.landing-nav', {
+      opacity: 0, y: -16, duration: 0.5,
+    })
+    .from('.landing-badge', {
+      opacity: 0, y: 20, duration: 0.55,
+    }, '-=0.25')
+    .from('.landing-title', {
+      opacity: 0, y: 32, duration: 0.65,
+    }, '-=0.35')
+    .from('.landing-desc', {
+      opacity: 0, y: 22, duration: 0.55,
+    }, '-=0.4')
+    .from('.landing-role-card', {
+      opacity: 0, y: 28, duration: 0.5,
+      stagger: { amount: 0.3, ease: 'power1.in' },
+    }, '-=0.3')
+    .from('.landing-hint', {
+      opacity: 0, y: 12, duration: 0.4,
+    }, '-=0.15');
+
+  // — Features strip: fade + slide al hacer scroll —
+  gsap.from('.landing-feature', {
+    scrollTrigger: {
+      trigger: '.landing-features-inner',
+      start: 'top 84%',
+    },
+    opacity: 0,
+    y: 36,
+    duration: 0.55,
+    stagger: 0.1,
+    ease: 'power2.out',
+  });
+
+  // — Footer: aparición suave —
+  gsap.from('.landing-footer', {
+    scrollTrigger: {
+      trigger: '.landing-footer',
+      start: 'top 98%',
+    },
+    opacity: 0,
+    y: 10,
+    duration: 0.45,
+    ease: 'power2.out',
+  });
+}
+
+// ============================================================
+//  INIT
+// ============================================================
 // Inicializar tema al cargar (scripts están al final del body, DOM ya disponible)
 initTheme();
+initLandingAnimations();
