@@ -102,6 +102,33 @@ function showToast(msg, type='success') {
 }
 
 // ============================================================
+//  ANIMACIÓN DE WIDGETS DEL DASHBOARD
+// ============================================================
+// Entrada escalonada de stat-cards + count-up de valores numéricos.
+// Se llama desde showPage() después de renderizar cada página.
+function animatePageWidgets() {
+  if (typeof gsap === 'undefined') return;
+
+  const cards = document.querySelectorAll('#pageContent .stat-card');
+  if (cards.length) {
+    gsap.from(cards, { y: 14, opacity: 0, duration: .4, stagger: .06, ease: 'power2.out', clearProps: 'all' });
+  }
+
+  document.querySelectorAll('#pageContent .stat-value').forEach(el => {
+    // Soporta formatos como "12", "4.8" o "$1.7M" (prefijo + número + sufijo)
+    const m = el.textContent.trim().match(/^([^0-9]*)(\d+(?:\.\d+)?)(.*)$/);
+    if (!m) return;
+    const target = parseFloat(m[2]);
+    const decimals = (m[2].split('.')[1] || '').length;
+    const obj = { v: 0 };
+    gsap.to(obj, {
+      v: target, duration: .9, ease: 'power2.out',
+      onUpdate: () => { el.textContent = m[1] + obj.v.toFixed(decimals) + m[3]; },
+    });
+  });
+}
+
+// ============================================================
 //  NOTIFICACIONES (compartido entre roles)
 // ============================================================
 function renderNotificacionesPage() {

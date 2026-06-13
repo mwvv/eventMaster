@@ -15,16 +15,25 @@
 
 <!-- ===== LANDING PAGE ===== -->
 <div id="landingPage" class="landing">
-  <!-- Animated background orbs -->
-  <div class="landing-orb landing-orb-1"></div>
-  <div class="landing-orb landing-orb-2"></div>
-  <div class="landing-orb landing-orb-3"></div>
+  <!-- Barra de progreso de scroll -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Orbes de fondo (el wrapper recibe el parallax del mouse, el orbe interno flota) -->
+  <div class="orb-wrap orb-wrap-1"><div class="landing-orb landing-orb-1"></div></div>
+  <div class="orb-wrap orb-wrap-2"><div class="landing-orb landing-orb-2"></div></div>
+  <div class="orb-wrap orb-wrap-3"><div class="landing-orb landing-orb-3"></div></div>
+  <div class="landing-grid-bg"></div>
 
   <!-- Nav -->
-  <nav class="landing-nav">
+  <nav class="landing-nav" id="landingNav">
     <div class="landing-brand">
       <div class="landing-brand-icon">E</div>
       <span class="landing-brand-name">EventMaster Pro</span>
+    </div>
+    <div class="landing-nav-links">
+      <a onclick="scrollToSection('caracteristicas')">Características</a>
+      <a onclick="scrollToSection('eventos')">Eventos</a>
+      <a onclick="scrollToSection('como-funciona')">Cómo funciona</a>
     </div>
     <div class="landing-nav-actions">
       <button class="theme-toggle-btn" onclick="toggleTheme()"></button>
@@ -34,86 +43,318 @@
 
   <!-- Hero -->
   <section class="landing-hero">
-    <div class="landing-badge">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Plataforma de eventos premium
-    </div>
-    <h1 class="landing-title">
-      Gestiona eventos<br>con <span class="gradient-text">precisión y elegancia</span>
-    </h1>
-    <p class="landing-desc">
-      Centraliza la organización de eventos, clientes, proveedores y pagos en una sola plataforma segura y moderna.
-    </p>
+    <div class="landing-hero-inner">
+      <div class="landing-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Plataforma de eventos premium
+      </div>
+      <h1 class="landing-title">
+        <span class="title-line"><span class="title-line-inner">Gestiona eventos con</span></span>
+        <span class="title-line"><span class="title-line-inner"><span class="gradient-text">precisión y elegancia</span></span></span>
+      </h1>
+      <p class="landing-desc">
+        Centraliza la organización de eventos, clientes, proveedores y pagos en una sola plataforma segura y moderna.
+      </p>
 
-    <!-- Role entry cards -->
-    <div class="landing-roles">
-      <div class="landing-role-card" onclick="enterAsRole('admin')">
-        <span class="role-card-emoji">🛡️</span>
-        <div class="role-card-name">Administrador</div>
-        <div class="role-card-desc">Gestión completa de eventos, usuarios y proveedores</div>
-        <div class="role-card-btn">Entrar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <!-- Tarjetas de entrada por rol -->
+      <div class="landing-roles">
+        <div class="landing-role-card" data-tilt onclick="enterAsRole('admin')">
+          <span class="role-card-emoji">🛡️</span>
+          <div class="role-card-name">Administrador</div>
+          <div class="role-card-desc">Gestión completa de eventos, usuarios y proveedores</div>
+          <div class="role-card-btn">Entrar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </div>
+        <div class="landing-role-card" data-tilt onclick="enterAsRole('cliente')">
+          <span class="role-card-emoji">🎉</span>
+          <div class="role-card-name">Cliente</div>
+          <div class="role-card-desc">Reserva y sigue tus eventos favoritos en tiempo real</div>
+          <div class="role-card-btn">Entrar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </div>
+        <div class="landing-role-card" data-tilt onclick="enterAsRole('proveedor')">
+          <span class="role-card-emoji">🚚</span>
+          <div class="role-card-name">Proveedor</div>
+          <div class="role-card-desc">Administra tus servicios y asignaciones fácilmente</div>
+          <div class="role-card-btn">Entrar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </div>
+        <div class="landing-role-card" data-tilt onclick="enterAsRole('invitado')">
+          <span class="role-card-emoji">👀</span>
+          <div class="role-card-name">Invitado</div>
+          <div class="role-card-desc">Explora el catálogo de eventos sin registrarte</div>
+          <div class="role-card-btn">Explorar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </div>
       </div>
-      <div class="landing-role-card" onclick="enterAsRole('cliente')">
-        <span class="role-card-emoji">🎉</span>
-        <div class="role-card-name">Cliente</div>
-        <div class="role-card-desc">Reserva y sigue tus eventos favoritos en tiempo real</div>
-        <div class="role-card-btn">Entrar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-      </div>
-      <div class="landing-role-card" onclick="enterAsRole('proveedor')">
-        <span class="role-card-emoji">🚚</span>
-        <div class="role-card-name">Proveedor</div>
-        <div class="role-card-desc">Administra tus servicios y asignaciones fácilmente</div>
-        <div class="role-card-btn">Entrar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-      </div>
-      <div class="landing-role-card" onclick="enterAsRole('invitado')">
-        <span class="role-card-emoji">👀</span>
-        <div class="role-card-name">Invitado</div>
-        <div class="role-card-desc">Explora el catálogo de eventos sin registrarte</div>
-        <div class="role-card-btn">Explorar <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-      </div>
+
+      <p class="landing-hint">
+        ¿Primera vez? <a onclick="enterAsRole('cliente')">Crea tu cuenta gratis</a> y empieza en segundos.
+      </p>
     </div>
 
-    <p class="landing-hint">
-      ¿Primera vez? <a onclick="enterAsRole('cliente')">Crea tu cuenta gratis</a> y empieza en segundos.
-    </p>
+    <div class="scroll-cue" onclick="scrollToSection('stats')">
+      <div class="scroll-cue-mouse"><div class="scroll-cue-dot"></div></div>
+      <span>Descubre más</span>
+    </div>
   </section>
 
-  <!-- Features strip -->
-  <div class="landing-features">
-    <div class="landing-features-inner">
-      <div class="landing-feature">
-        <div class="feature-icon">📅</div>
-        <div>
-          <div class="feature-name">Gestión completa</div>
-          <div class="feature-desc">Crea y administra eventos con total control</div>
-        </div>
+  <!-- Marquee infinito de tipos de evento y servicios -->
+  <div class="landing-marquee" aria-hidden="true">
+    <div class="marquee-row">
+      <div class="marquee-track" id="marqueeTrack1">
+        <span class="marquee-item">💍 Matrimonios</span>
+        <span class="marquee-item">🏢 Corporativos</span>
+        <span class="marquee-item">🎂 Cumpleaños</span>
+        <span class="marquee-item">🎓 Graduaciones</span>
+        <span class="marquee-item">🎤 Conferencias</span>
+        <span class="marquee-item">🎶 Conciertos</span>
+        <span class="marquee-item">🥂 Galas</span>
+        <span class="marquee-item">🎪 Festivales</span>
       </div>
-      <div class="landing-feature">
-        <div class="feature-icon">💳</div>
-        <div>
-          <div class="feature-name">Pagos seguros</div>
-          <div class="feature-desc">Múltiples métodos de pago disponibles</div>
-        </div>
-      </div>
-      <div class="landing-feature">
-        <div class="feature-icon">🤝</div>
-        <div>
-          <div class="feature-name">Red de proveedores</div>
-          <div class="feature-desc">Conecta con proveedores verificados</div>
-        </div>
-      </div>
-      <div class="landing-feature">
-        <div class="feature-icon">🔔</div>
-        <div>
-          <div class="feature-name">Notificaciones</div>
-          <div class="feature-desc">Mantente al día en tiempo real</div>
-        </div>
+    </div>
+    <div class="marquee-row">
+      <div class="marquee-track marquee-reverse" id="marqueeTrack2">
+        <span class="marquee-item">📸 Fotografía</span>
+        <span class="marquee-item">🍽️ Catering</span>
+        <span class="marquee-item">🎧 DJ &amp; Sonido</span>
+        <span class="marquee-item">💐 Decoración</span>
+        <span class="marquee-item">🪩 Iluminación</span>
+        <span class="marquee-item">🎥 Video</span>
+        <span class="marquee-item">🚐 Transporte</span>
+        <span class="marquee-item">🎆 Pirotecnia</span>
       </div>
     </div>
   </div>
 
+  <!-- Métricas con contadores animados -->
+  <section class="landing-stats" id="stats">
+    <div class="landing-stats-inner">
+      <div class="landing-stat reveal">
+        <div class="landing-stat-value"><span data-count="120">120</span>+</div>
+        <div class="landing-stat-label">Eventos gestionados</div>
+      </div>
+      <div class="landing-stat reveal">
+        <div class="landing-stat-value"><span data-count="50">50</span>+</div>
+        <div class="landing-stat-label">Proveedores verificados</div>
+      </div>
+      <div class="landing-stat reveal">
+        <div class="landing-stat-value"><span data-count="4.8">4.8</span>★</div>
+        <div class="landing-stat-label">Calificación promedio</div>
+      </div>
+      <div class="landing-stat reveal">
+        <div class="landing-stat-value"><span data-count="98">98</span>%</div>
+        <div class="landing-stat-label">Clientes satisfechos</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features bento grid -->
+  <section class="landing-section" id="caracteristicas">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Características</span>
+      <h2 class="section-title">Todo lo que necesitas,<br><span class="gradient-text">en un solo lugar</span></h2>
+      <p class="section-sub">Desde la primera reserva hasta el último pago: una plataforma que coordina cada detalle de tus eventos.</p>
+    </div>
+    <div class="bento-grid">
+      <div class="bento-card bento-wide">
+        <div class="bento-visual bento-chart">
+          <div class="chart-bar" style="--h:35%"></div>
+          <div class="chart-bar" style="--h:55%"></div>
+          <div class="chart-bar" style="--h:42%"></div>
+          <div class="chart-bar" style="--h:70%"></div>
+          <div class="chart-bar" style="--h:58%"></div>
+          <div class="chart-bar" style="--h:85%"></div>
+          <div class="chart-bar" style="--h:64%"></div>
+          <div class="chart-bar" style="--h:92%"></div>
+        </div>
+        <h3>Gestión integral</h3>
+        <p>Crea, edita y monitorea todos tus eventos desde un dashboard central con métricas en tiempo real.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-visual">
+          <div class="mini-card">
+            <div class="mini-card-chip"></div>
+            <div class="mini-card-num">•••• •••• 4291</div>
+          </div>
+        </div>
+        <h3>Pagos seguros</h3>
+        <p>Crédito, débito y transferencia con seguimiento de cada transacción.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-visual">
+          <div class="mini-stepper">
+            <div class="mini-step on">1</div>
+            <div class="mini-step-line on"></div>
+            <div class="mini-step on">2</div>
+            <div class="mini-step-line"></div>
+            <div class="mini-step">3</div>
+          </div>
+        </div>
+        <h3>Reservas en 3 pasos</h3>
+        <p>Flujo guiado de reserva con confirmación inmediata.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-visual">
+          <div class="mini-provs">
+            <div class="mini-avatars">
+              <div class="avatar avatar-brand">AS</div>
+              <div class="avatar avatar-accent">FA</div>
+              <div class="avatar avatar-success">FM</div>
+              <div class="avatar avatar-brand">CH</div>
+            </div>
+            <div class="mini-stars">★★★★★ <span>4.8</span></div>
+          </div>
+        </div>
+        <h3>Red de proveedores</h3>
+        <p>Proveedores verificados con calificaciones reales de clientes.</p>
+      </div>
+      <div class="bento-card bento-wide">
+        <div class="bento-visual bento-toasts">
+          <div class="mini-toast">✓ &nbsp;Reserva confirmada para Boda García-Morales</div>
+          <div class="mini-toast info">🔔 &nbsp;Audio &amp; Sonido Pro aceptó la asignación</div>
+          <div class="mini-toast warn">💳 &nbsp;Pago pendiente: Cumpleaños TechCorp</div>
+        </div>
+        <h3>Notificaciones en tiempo real</h3>
+        <p>Reservas, pagos y asignaciones: entérate al instante de cada movimiento.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-visual bento-badges">
+          <span class="badge badge-info">admin</span>
+          <span class="badge badge-brand">cliente</span>
+          <span class="badge badge-success">proveedor</span>
+          <span class="badge badge-gray">invitado</span>
+        </div>
+        <h3>Roles y permisos</h3>
+        <p>Cada rol ve exactamente lo que necesita. Ni más, ni menos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase de eventos: scroll horizontal pineado -->
+  <section class="landing-showcase" id="eventos">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Catálogo</span>
+      <h2 class="section-title">Eventos que ya están <span class="gradient-text">en marcha</span></h2>
+      <p class="section-sub">Sigue bajando: el catálogo se desplaza contigo.</p>
+    </div>
+    <div class="showcase-viewport">
+      <div class="showcase-track" id="showcaseTrack"></div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section class="landing-section landing-how" id="como-funciona">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Cómo funciona</span>
+      <h2 class="section-title">De la idea al evento<br><span class="gradient-text">en tres pasos</span></h2>
+    </div>
+    <div class="how-steps">
+      <div class="how-line"><div class="how-line-fill" id="howLineFill"></div></div>
+      <div class="how-step">
+        <div class="how-step-num">01</div>
+        <div>
+          <h3>Explora el catálogo</h3>
+          <p>Encuentra el evento ideal filtrando por tipo, fecha y lugar. Puedes mirar sin registrarte, como invitado.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">02</div>
+        <div>
+          <h3>Reserva en 3 pasos</h3>
+          <p>Selecciona el evento, indica la cantidad de personas y confirma. Un stepper te guía sin fricción.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">03</div>
+        <div>
+          <h3>Paga seguro y disfruta</h3>
+          <p>Elige tu método de pago, recibe tu comprobante al instante y sigue el estado de tu reserva en tiempo real.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonios -->
+  <section class="landing-section landing-testimonials">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Testimonios</span>
+      <h2 class="section-title">Historias que <span class="gradient-text">salieron perfectas</span></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">Organizamos el matrimonio completo en una sola plataforma. Proveedores, pagos, invitados: todo coordinado sin una sola llamada.</p>
+        <div class="testimonial-person">
+          <div class="avatar avatar-brand">CM</div>
+          <div>
+            <div class="testimonial-name">Carolina Morales</div>
+            <div class="testimonial-role">Cliente · Matrimonio</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">Como proveedor de sonido recibo asignaciones claras y veo el estado de cada evento en tiempo real. Cero confusiones.</p>
+        <div class="testimonial-person">
+          <div class="avatar avatar-success">RS</div>
+          <div>
+            <div class="testimonial-name">Rodrigo Salas</div>
+            <div class="testimonial-role">Proveedor · Audio &amp; Sonido Pro</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">Pasamos de planillas a un panel central. Hoy el equipo gestiona el doble de eventos en la mitad del tiempo.</p>
+        <div class="testimonial-person">
+          <div class="avatar avatar-accent">VA</div>
+          <div>
+            <div class="testimonial-name">Valentina Acuña</div>
+            <div class="testimonial-role">Administradora · EventMaster</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="landing-cta">
+    <div class="cta-box reveal">
+      <div class="cta-glow"></div>
+      <h2>¿Listo para tu próximo<br><span class="gradient-text">gran evento</span>?</h2>
+      <p>Únete hoy y gestiona reservas, proveedores y pagos desde un solo lugar.</p>
+      <div class="cta-actions">
+        <button class="btn btn-primary btn-lg magnetic" onclick="enterAsRole('cliente')">
+          Comenzar ahora
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <button class="btn btn-outline btn-lg" onclick="enterAsRole('invitado')">Explorar catálogo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer class="landing-footer">
-    © 2025 EventMaster Pro &nbsp;·&nbsp; Hecho con ❤️ en Chile
+    <div class="footer-inner">
+      <div>
+        <div class="landing-brand">
+          <div class="landing-brand-icon">E</div>
+          <span class="landing-brand-name">EventMaster Pro</span>
+        </div>
+        <p class="footer-tag">La plataforma que centraliza eventos, clientes, proveedores y pagos con precisión y elegancia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plataforma</h4>
+        <a onclick="scrollToSection('caracteristicas')">Características</a>
+        <a onclick="scrollToSection('eventos')">Catálogo de eventos</a>
+        <a onclick="scrollToSection('como-funciona')">Cómo funciona</a>
+      </div>
+      <div class="footer-col">
+        <h4>Accesos</h4>
+        <a onclick="enterAsRole('admin')">Administrador</a>
+        <a onclick="enterAsRole('cliente')">Cliente</a>
+        <a onclick="enterAsRole('proveedor')">Proveedor</a>
+        <a onclick="enterAsRole('invitado')">Invitado</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 EventMaster Pro &nbsp;·&nbsp; Hecho con ❤️ en Chile</div>
   </footer>
 </div>
 

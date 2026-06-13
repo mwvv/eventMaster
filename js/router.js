@@ -78,5 +78,6 @@ function showPage(id) {
     pc.classList.remove('page-enter');
     void pc.offsetWidth;
     pc.classList.add('page-enter');
+    if (typeof animatePageWidgets === 'function') animatePageWidgets();
   }
 }
